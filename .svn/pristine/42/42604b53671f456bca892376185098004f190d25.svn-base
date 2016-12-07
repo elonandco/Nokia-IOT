@@ -1,0 +1,57 @@
+$depth: (
+  level: 10
+);
+
+.tree-container {
+  color: #000;
+  list-style-type: none;
+  list-style-image: none;
+  padding: 0;
+  background-color: rgba(53,89, 141, .1);
+
+  .tree-node {
+
+    .tree-content {
+      height: 41px;
+      padding-top: 10px;
+      border-top: 0;
+      border-bottom: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      &:hover {
+        background-color: #215EBF;
+        color: #FFF;
+      }
+    }
+
+    .tree-content.selected {
+      background-color: #215EBF;
+      color: #FFF;
+    }
+
+    @for $i from 0 through map-get($depth, level)-1 {
+      .tree-content.level-#{$i+1} {
+        padding-left: #{$i*12 + 15}px;
+      }
+    }
+
+    .tree-icon {
+      font-size: 21px;
+      color: #4889D8;
+      cursor: pointer;
+    }
+
+    .tree-wholerow {
+      display: inline;
+      margin-left: 3px;
+      width: 100%;
+      font-family: "Roboto-Thin";
+      font-size: 1.44em;
+      cursor: pointer;
+    }
+
+  }
+
+
+}
+

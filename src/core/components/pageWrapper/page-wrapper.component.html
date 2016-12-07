@@ -1,0 +1,21 @@
+<div class="page-wrapper">
+  <workflow-component *ngIf="workflowActive" [workflowName]="workflowName" [headless]="true" [ngClass]="{'hidden': workflowHidden}"
+                      (isDone)="isDone($event)"></workflow-component>
+
+  <div class="component-container" *ngIf="componentActive">
+    <h2 class="component-header" >
+      {{componentType}}
+
+      <span class="header-icons ko-x" (click)="onClose($event)"></span>
+      <span class="header-icons ko-restart" (click)="onRefresh($event)" *ngIf="refreshOperation"></span>
+    </h2>
+    <div class="campaign-container" *ngIf="campaignActive">
+      <div class="button-container">
+        <button id="{{operation.name}}_id" [attr.operation]="operation.operationName" class="btn btn-primary" *ngFor="let operation of workflowOperations" (click)="onOperationClick($event)">{{operation.name}}</button>
+      </div>
+
+      <data-table  [columns]="columnsArray" [columnData]="columnData" [operations]="workflowOperations" ></data-table>
+    </div>
+
+  </div>
+</div>

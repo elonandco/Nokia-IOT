@@ -1,0 +1,47 @@
+<html>
+
+<head>
+  <base href="/">
+  <title>IOT Angular POC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="node_modules/roboto-fontface/css/roboto-fontface.css">
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="styles/core/assets/css/core.css">
+  <link href="libs/lakeline/css/lakeline.css" rel="stylesheet">
+  <link href="libs/lakeline/css/off-canvas.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+
+  <link rel="stylesheet" type="text/css" href="node_modules/primeui/primeui-ng-all.min.css"/>
+  <link rel="stylesheet" type="text/css" href="node_modules/primeui/themes/bootstrap/theme.css"/>
+  <link rel="stylesheet" type="text/css" href="node_modules/dragula/dist/dragula.css"/>
+
+  <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+  <script src="node_modules/zone.js/dist/zone.js"></script>
+  <script src="node_modules/reflect-metadata/Reflect.js"></script>
+  <script src="node_modules/systemjs/dist/system.src.js"></script>
+
+  <script src="node_modules/rxjs/bundles/Rx.js"></script>
+  <script src="node_modules/primeui/primeui-ng-all.min.js"></script>
+
+  <script src="systemjs.config.js"></script>
+  <script>
+    System.import('src').catch(function (err) {
+      console.error(err);
+    });
+  </script>
+</head>
+<body>
+<my-app>
+  <div class="spinner-container">
+    <div class="progress-window page-loader">
+      <div class="window">
+        <h2>Reticulating Splines...</h2>
+        <div class="lg spinner"></div>
+      </div>
+    </div>
+  </div>
+</my-app>
+</body>
+</html>

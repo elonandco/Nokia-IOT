@@ -1,0 +1,44 @@
+.sidebar-groups{
+  color: #fff;
+  font-size: 11px;
+  left: 0;
+
+  .groups-update {
+    font-size: 22px;
+    color: #4185d7;
+    font-family: "Roboto-Light";
+    text-align: left;
+    padding: 30px 10px 35px 10px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    line-height: 25px;
+
+    button {
+      border: none;
+      font-size: 13px;
+      padding: 5px 15px 6px 15px;
+      font: 14px "Roboto-Light";
+      font-weight: bold;
+      position: relative;
+      background: #dcdcdc;
+      color: #999999;
+      float: right;
+      cursor: default;
+      i {
+        font-size: 16px;
+      }
+      .text {
+        padding-left: 8px;
+      }
+    }
+  }
+
+  .tree {
+      background-color: #fff;
+  }
+
+}
+
+
+

@@ -1,0 +1,8 @@
+<div *ngIf="status == 'FAIL'">
+	{{message}}
+</div>
+<div *ngIf="resultCode == '-1'">
+	{{resultMessage}}
+</div>
+<chart *ngIf="status !== 'FAIL' && resultCode !== '-1'" id="campaign-chart" class="campaign-piechart" [options]="options">
+</chart>

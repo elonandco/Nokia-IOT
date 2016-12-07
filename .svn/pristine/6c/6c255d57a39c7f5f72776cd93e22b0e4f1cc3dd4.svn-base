@@ -1,0 +1,385 @@
+.app-container{
+  background: #FAFAFA;
+}
+
+
+body, .off-canvas-content {
+    background: #fafafa none repeat scroll 0 0;
+}
+.row {
+    background: transparent none repeat scroll 0 0;
+}
+.table-wrap {
+    background: #eaeaea none repeat scroll 0 0;
+    border-radius: 10px;
+    padding: 15px;
+}
+.back-to-home {
+    color: #3671c0;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0 0 20px 15px;
+    padding: 0 0 0 20px;
+    position: relative;
+    text-decoration: underline;
+}
+.back-to-home .ko-home {
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 2px;
+}
+table.table {
+    background: transparent none repeat scroll 0 0;
+}
+.table-striped .even {
+    background: #fff none repeat scroll 0 0;
+}
+.table-wrap h2 {
+    color: #3ab8ef;
+    margin: 5px 0 20px;
+    padding: 15px;
+}
+.table-wrap h2 i {
+    color: #999;
+}
+.col-search {
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    color: #333;
+    font-size: 0.9em;
+    font-weight: 400;
+    padding: 4px;
+    width: 100%;
+}
+.dataTables_wrapper > div:first-child > div {
+    background: transparent none repeat scroll 0 0;
+    color: #000;
+    padding: 0 0 15px;
+}
+.dataTables_wrapper > div:last-child > div {
+    background: transparent none repeat scroll 0 0;
+    color: #000;
+    padding-top: 20px;
+    border: 0px solid;
+}
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+    background: transparent none repeat scroll 0 0;
+    color: #000;
+    font-weight: normal;
+}
+.dataTable tfoot tr th {
+    background: transparent none repeat scroll 0 0;
+    border: 0 none;
+    color: #333;
+    padding: 10px 4px 0;
+}
+.dataTable tr td {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.dataTable .i-btn {
+    text-align: center;
+    width: 100%;
+}
+.dataTable .status {
+    display: inline-block;
+    float: left;
+    padding-right: 30px;
+}
+.dataTable .i-btn.status {
+    display: inline-block;
+    float: right;
+    margin-left: -20px;
+    padding-right: 0;
+    width: auto;
+}
+.dataTable .i-btn i {
+    color: #4889d8;
+    cursor: pointer;
+    font-size: 18px;
+    vertical-align: middle;
+}
+.dataTable .i-btn i.delete {
+    color: #cd0a0a;
+    font-size: 24px;
+    font-style: normal;
+    line-height: 14px;
+    vertical-align: text-top;
+}
+.dataTable .i-btn i {
+    cursor: pointer;
+}
+.dataTable .i-btn i.success {
+    color: #999;
+}
+.dataTable .i-btn i.active {
+    color: #000;
+}
+.dataTable span.inactive {
+    color: #e0862d;
+}
+.dataTable span.success {
+    color: #44be43;
+}
+.dataTable.table-bordered {
+    border: 0 none;
+}
+.paginate_button.first > a::before {
+    border-color: transparent transparent transparent #333;
+}
+.paginate_button.last > a::after {
+    border-color: transparent transparent transparent #333;
+}
+.paginate_button.previous > a::after, .paginate_button.first > a::after {
+    border-color: transparent #333 transparent transparent;
+}
+.paginate_button.next > a::after, .paginate_button.last > a::before {
+    border-color: transparent transparent transparent #333;
+}
+.pagination > li > a, .pagination > li > span {
+    border: 0 none;
+    border-radius: 20px;
+}
+.pagination > li.paginate_button > a, .paginate_button.previous > a, .paginate_button.next > a, .paginate_button.first > a, .paginate_button.last > a {
+    background: #ccc none repeat scroll 0 0;
+    border-radius: 20px !important;
+    color: #000;
+}
+li.paginate_button.active > a {
+    color: #fff;
+}
+.pagination > li > a:hover {
+    border: 1px solid #4889d8;
+}
+.dataTables_length label {
+    margin-right: 100px !important;
+    font-weight: normal;
+}
+.dataTables_filter label {
+    margin-left: 40px !important;
+    font-weight: normal;
+}
+.dataTables_filter a {
+    font-size: 1.2em;
+}
+.dataTables_filter a i {
+    margin-right: 5px;
+}
+.dataTables_filter td {
+    overflow-x: auto;
+}
+.quick-links {
+    background: #fff none repeat scroll 0 0;
+    display: inline-block;
+    height: auto;
+    padding: 10px;
+    width: auto;
+}
+.quick-links li {
+    clear: left;
+    float: left;
+    list-style: outside none none;
+    padding: 10px 0;
+    vertical-align: middle;
+}
+.quick-links i {
+    color: #999;
+    float: left;
+    font-size: 30px;
+}
+.quick-links li .toggle {
+    float: left;
+    margin-left: 15px;
+}
+.quick-nav li {
+    float: left;
+    list-style: outside none none;
+    padding: 10px;
+    vertical-align: middle;
+}
+.quick-nav i {
+    color: #4889d8;
+    float: left;
+    font-size: 22px;
+}
+.quick-nav span {
+    display: inline-block;
+    float: left;
+    font-size: 18px;
+    margin-left: 5px;
+}
+.hide {
+    display: none;
+}
+div.table-wrap h2, div.content-wrap h2 {
+    margin-bottom: 20px;
+}
+.dataTables_length label {
+    margin-right: 150px !important;
+    white-space: nowrap;
+}
+h2 .ko-restart {
+    color: #4889d8;
+    cursor: pointer;
+    float: right;
+}
+h2 .ko-x {
+    color: #4889d8;
+    cursor: pointer;
+    float: right;
+}
+.table-wrap {
+    background: #eaeaea none repeat scroll 0 0;
+    border-radius: 10px;
+    margin: 0 50px;
+    padding: 15px;
+}
+.row.row-offcanvas {
+    background: #fafafa none repeat scroll 0 0;
+}
+
+.close-button {
+	text-align: right;
+}
+
+.tree-form-buttons{
+	bottom:-30px ! important;
+}
+.filters-on-bottom .ui-datatable-tablewrapper {
+  margin: 0 0 45px 0!important;
+  position: relative;
+}
+.filters-on-bottom input.ui-column-filter {
+  position: absolute!important;
+  bottom: -45px!important;
+}
+.filters-on-bottom.five-columns input.ui-column-filter {
+  width:19%!important;
+}
+.filters-on-bottom.two-columns input.ui-column-filter {
+  width:49%!important;
+}
+.paginator-options-container {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 200px;
+  font-weight: 100;
+}
+.paginator-options-container::before {
+  content:"Show";
+}
+.paginator-options-container::after {
+  content:"entries";
+}
+.paginator-options-container select.ui-paginator-rpp-options {
+  background: #FFF;
+  border: solid 1px #999;
+  color: #333;
+  height: 30px;
+  font-size: 1em;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  margin: 0 5px 0 5px;
+}
+
+.tree-form-buttons{
+	bottom:-30px ! important;
+}
+
+.dataTables_filter{
+	position: inherit;
+}
+
+select.ui-paginator-rpp-options.ui-widget.ui-state-default{
+    position: absolute;
+    top: 21px;
+    left: 39px;
+    background: #FFF;
+    border: solid 1px #999;
+    color: #333;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    width: 70px;
+    height: 30px;
+    padding-left: 15px;
+    color: #333;
+}
+
+.dataTables_length span{
+  margin-right: 80px !important;
+}
+
+.pagination-info{
+  position: absolute;
+  margin-top: -50px;
+}
+#firmwareTable_filter label {
+    float: right;
+}
+#firmwareTable_filter label input {
+    margin: 0 0 0 10px;
+    width: 145px;
+}
+.ui-widget-header ui-helper-clearfix{
+	border: 0 !important;
+}
+
+.ui-paginator-bottom.ui-paginator.ui-widget-header.ui-unselectable-text span {
+    border-radius: 20px !important;
+    padding: 6px 12px;
+    margin-left: -1px;
+    box-shadow: none;
+    outline: none;
+    border: none;
+}
+
+span.ui-paginator-page.ui-paginator-element.ui-state-default.ui-corner-all.ui-state-active {
+    width: 34px;
+    height: 34px;
+    background-color: #3AB8EF !important;
+}
+
+span.fa.fa-step-backward{
+    padding: 4px 2px! important;
+}
+
+span.fa.fa-backward {
+    padding: 4px 0px! important;
+    background: #CCC;
+}
+
+
+span.fa.fa-step-forward{
+    padding: 4px 2px! important;
+}
+
+span.fa.fa-forward {
+    padding: 4px 0px! important;
+}
+
+.ui-paginator-bottom.ui-paginator.ui-widget-header.ui-unselectable-text {
+    background: none ! important;
+}
+
+.dataTables_wrapper.form-inline.dt-bootstrap.component-container > h2 {
+  margin: 5px 0px 20px;
+  color: #3AB8EF;
+  padding: 15px; 
+}
+
+input.ui-column-filter.ui-inputtext.ui-corner-all.ui-state-default.ui-widget {
+    color: #333;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 4px;
+    font-size: .9em;
+    font-weight: 400;
+    border-color: black;
+}
+.firmwareTables_wrapper input.ui-column-filter.ui-inputtext.ui-corner-all.ui-state-default.ui-widget {
+    width: 10%;
+}

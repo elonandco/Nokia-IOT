@@ -1,0 +1,79 @@
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Rx';
+import {AbstractService} from './abstract-service';
+import {AppConfigurationService} from './app-configuration.service';
+import {BrowserStoreService} from './browser-store.service';
+import {UPDATE_QUICKLINKS} from '../reducers/user-preferences.reducer';
+
+
+@Injectable()
+export class QuickLinkService implements AbstractService {
+
+  initWorkflow: Observable<any>;
+  quickLinks:Array<any>;
+
+  constructor(
+    private _store:Store<any>,
+    private _appConfigService:AppConfigurationService,
+    private _browserStoreService:BrowserStoreService
+  )
+  {
+    this._store = _store;
+    this.initWorkflow = this._store.select('InitWorkflowReducer');
+    this.initWorkflow.subscribe(data => this.onInitCompleted(data));
+  }
+
+
+  onInitCompleted(data){
+    if(data && data.hasOwnProperty('status') && data.status === 'completed'){
+      let serviceQuickLinks:Array<any> = _.find(this._store.value.DSOModelReducer.domains.domain,{'id':'QuickLinks'}).services.service;
+      let configQuickLinks:Array<any> = [];
+      _.each(this._appConfigService.getLinkData(),function(quickLink:any){
+        let quickLinkParse = quickLink.component.match(/^(.*)LinkComponent.*/);
+        if(quickLinkParse.length>1){
+          quickLink.parseName = quickLinkParse[1];
+          configQuickLinks.push(quickLink)
+        }
+      });
+
+      this.quickLinks = _.intersectionWith(serviceQuickLinks,configQuickLinks,function(serviceQuickLink,configQuickLink){
+        if(serviceQuickLink.name === configQuickLink.parseName){
+          serviceQuickLink.path = configQuickLink.path;
+          serviceQuickLink.component = configQuickLink.component;
+          serviceQuickLink.metadata = configQuickLink.metadata;
+          return true
+        }
+        return false
+
+      });
+      let userSettings = this._browserStoreService.getLocalStorage('userSettings')
+      var localQuickLinks = this.quickLinks;
+      if(userSettings && userSettings.quickLinks){
+        let storeQuickLinks = userSettings.quickLinks;
+        _.each(storeQuickLinks,function(sw:any){
+          let quickLink = _.find(localQuickLinks,function(w:any) {
+            return sw.name === w.name
+          });
+
+          if(quickLink){
+            quickLink.isHidden = sw.isHidden;
+          }
+        });
+      }
+
+      this.quickLinks = localQuickLinks;
+      _.each(this.quickLinks,function(w){
+        if(!w.hasOwnProperty('isHidden')){
+          w.isHidden = false;
+        }
+      });
+
+      this._store.dispatch({type: UPDATE_QUICKLINKS, payload: {quickLinks:this.quickLinks}});
+
+    }
+  }
+
+  onLogOut(){}
+
+}

@@ -1,0 +1,10 @@
+<div *ngIf="status == 'FAIL'">
+	{{message}}
+</div>
+<div *ngIf="status != 'FAIL'">
+<span class="chart-title">{{sortType}}</span>
+<div class="firmware-text">
+	<div class="firmware-chart"></div>
+	<span *ngFor="let firmware of firmwares; let i = index" class="firmware{{i}}">{{firmware.firmwareName}} {{firmware.firmwareTargetVersion}}</span>
+</div>
+</div>

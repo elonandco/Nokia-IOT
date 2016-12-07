@@ -1,0 +1,25 @@
+<div *ngIf="show" class="sidebar-widgets">
+  <div class="drag-widget-container" >
+    <h3 class="drag-drop-title">Widgets</h3>
+    <div id="sidebarDragulaContainer" class="sidebar-widget-container"  >
+      <div *ngFor="let widget of widgetArray" (click)="onWidgetClick($event)" [attr.component]="widget.component"  id="{{widget.id}}"
+           class="{{widget.metadata.iconClass}} side-bar-widget"  title="{{widget.metadata.title}}">
+      </div>
+    </div>
+  </div>
+<!-- 
+  <div class="quick-link-toggle-container">
+    <div class="quick-links">
+      <h3>Quick Links</h3>
+
+      <div *ngFor="let link of linkArray" class="link-container user-link">
+        <span class="{{link.metadata.iconClass}}"></span>
+        <toggle-button isOn="{{link.isHidden}}" (toggle)="quickLinkToggle(link)"></toggle-button>
+      </div>
+
+    </div>
+
+  </div>
+-->
+</div>
+

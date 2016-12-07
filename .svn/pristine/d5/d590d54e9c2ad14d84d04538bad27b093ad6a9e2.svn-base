@@ -1,0 +1,79 @@
+import {Component} from '@angular/core';
+import {WidgetSettingsComponent} from '../../../../core/components/dashboard/widgets/widget-settings.component';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {UPDATE_SETTINGS} from '../../../../core/reducers/user-preferences.reducer';
+import {ToggleButtonComponent} from '../../../../core/components/toggleButton/toggle-button.componet';
+
+@Component({
+  selector: "widget-settings",
+  templateUrl: "/src/custom/components/dashboard/campaigns/campaign-widget-settings.component.html",
+  directives: [ToggleButtonComponent]
+})
+
+export class CampaignsWidgetSettingsComponent extends WidgetSettingsComponent {
+
+  private firmwareInclude:boolean = true;
+  private configInclude:boolean = true;
+  private widget:any;
+  displayType:string;
+
+  dosObs:Observable<any>;
+
+  constructor(private store:Store<any>) {
+    super();
+    this.dosObs = this.store.select('UserPreferencesReducer');
+    this.dosObs.subscribe(data => {
+      this.widget = _.find(data.widgets, function (widget:any) {
+        return widget.id === "Campaigns"
+      });
+
+      if (this.widget) {
+        if (this.widget.settings && this.widget.settings.hasOwnProperty('firmwareInclude')) {
+          this.firmwareInclude = this.widget.settings.firmwareInclude;
+        }
+
+        if (this.widget.settings && this.widget.settings.hasOwnProperty('configInclude')) {
+          this.configInclude = this.widget.settings.configInclude;
+        }
+
+        if (this.widget.settings && this.widget.settings.hasOwnProperty('displayType')) {
+          this.displayType = this.widget.settings.displayType;
+        }
+
+      }
+
+    });
+
+  }
+
+  configToggle() {
+    this.configInclude = !this.configInclude;
+    this.store.dispatch({
+      type: UPDATE_SETTINGS,
+      payload: {'widget': this.widget, 'settings': {'configInclude': this.configInclude}}
+    })
+  }
+
+  firmwareToggle() {
+    this.firmwareInclude = !this.firmwareInclude;
+    this.store.dispatch({
+      type: UPDATE_SETTINGS,
+      payload: {'widget': this.widget, 'settings': {'firmwareInclude': this.firmwareInclude}}
+    })
+  }
+
+  onDisplayChange() {
+    if (this.displayType === 'percentage') {
+      this.displayType = 'count'
+    } else {
+      this.displayType = 'percentage';
+    }
+
+    this.store.dispatch({
+      type: UPDATE_SETTINGS,
+      payload: {'widget': this.widget, 'settings': {'displayType': this.displayType}}
+    })
+  }
+
+}

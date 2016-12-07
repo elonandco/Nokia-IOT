@@ -1,0 +1,46 @@
+.toggle{
+  min-height: 34px;
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-group {
+  position: absolute;
+  width: 200%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transition: left .35s;
+  -webkit-transition: left .35s;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+
+  label{
+    font-size: 1.25em;
+    position: absolute;
+    right: 52%;
+    box-shadow: none;
+    padding-left: 6px!important;
+    padding-right: 6px;
+  }
+}
+
+.toggle-group.switch{
+  left: -100%;
+}
+
+.toggle-off{
+  padding-right: 10px !important;
+  right: auto;
+  padding-left: 10px !important;
+  box-shadow: none;
+}
+
+
+.toggle-on.btn {
+  background: #4889d8;
+}
+
+
+
+

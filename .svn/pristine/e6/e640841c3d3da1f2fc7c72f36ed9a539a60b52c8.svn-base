@@ -1,0 +1,12 @@
+<div class="workflow-template">
+  <div class="workflow-inner">
+	<div class="init-panel">
+		<div class="workflow-header">
+        	<div class="workflow-title"></div>
+        	<span class="header-icons ko-x" (click)="onClose($event)"></span>
+    	</div>
+	  <workflow-component *ngIf="initDone === true" [workflowName]="initWorkflowName" [headless]="false"
+	                      (isDone)="isDone($event)" [workflowParameters]="workflowParameters"></workflow-component>
+	</div>
+  </div>
+</div>

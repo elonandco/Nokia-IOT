@@ -1,0 +1,42 @@
+import {Component, Input} from '@angular/core';
+import {Router} from '@angular/router-deprecated';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Rx';
+/**
+ * Created by jlmayorga on 4/18/16.
+ */
+
+@Component({
+  selector: 'spinner-component',
+  templateUrl: '/src/core/components/spinner/spinner.component.html'
+})
+
+export class SpinnerComponent {
+  @Input()
+  //right now we don't know what header is, but we do know it a string
+  private header:string = '';
+  @Input()
+  private message:string = 'Please wait while the application is loading...';
+  @Input()
+  private iconClass:string = 'ko-user-admin';
+
+  constructor(private _store:Store<any>, public _router:Router) {
+  	this.initWorkflow = this._store.select('InitWorkflowReducer');
+	this.initWorkflow.subscribe((data:any)=> {
+        this.initDone = data.status === "completed";
+        this.updateHeader()
+    },
+    error => {
+
+    });
+  }
+
+  ngOnInit() {
+  	this.updateHeader();
+  }
+
+  updateHeader(){
+    //when the workflow is initiating, show hello, otherwise show loading
+    this.header = (this.initDone) ? 'Loading' : 'Hello!'
+  }
+}

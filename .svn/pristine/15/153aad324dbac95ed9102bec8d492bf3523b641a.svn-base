@@ -1,0 +1,42 @@
+import {AbstractNode} from './abstract-node';
+import {Component, Input} from '@angular/core';
+import {Router} from '@angular/router-deprecated';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Rx';
+
+@Component({
+  selector: 'data-event-node',
+  templateUrl: 'src/core/components/workflow/nodes/data-event-node.component.html'
+
+})
+
+/**
+ * Created by jlmayorga on 4/11/16.
+ */
+export class DataEventNodeComponent extends AbstractNode {
+  	firstName: string = "";
+ 	  lastName: string = "";
+  	@Input()
+  	private header:string = 'Hello ';
+  	@Input()
+  	private message:string = 'Just a moment while your preferences are loaded.';
+  	@Input()
+  	private iconClass:string = 'ko-user-admin';
+
+  	constructor(private _store:Store<any>, public _router:Router) {
+    	this._store = _store;
+    	this.dsoObs = this._store.select('DSOModelReducer');
+    	this.dsoObs.subscribe(data => this.updateUserInfo(data));
+  	}
+
+	updateUserInfo(data){
+		if (data!= undefined && data.hasOwnProperty('firstName')){
+	  		this.firstName=data.firstName;
+	  	}
+	  	
+	  	if (data!= undefined && data.hasOwnProperty('lastName')){
+	  	  	this.lastName=data.lastName;
+	  	}
+	  
+	  }
+}

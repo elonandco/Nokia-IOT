@@ -1,0 +1,101 @@
+.navbar{
+  margin-bottom:0;
+
+  li{
+    padding: 0 8px;
+    margin-top: 12px;
+
+    .text{
+      font: 18px Roboto-Light;
+      color: #777777;
+      line-height: 35px;
+    }
+
+    .header-refresh{
+      .icon{
+        font-size: 18px;
+        color:#4185d7
+      }
+
+    }
+
+    .header-username{
+
+      padding: 0 20px 0;
+      display: inline-block;
+      float: left;
+    }
+
+    .icon{
+      padding-right: 7px;
+      line-height: 33px;
+      float: left;
+      cursor: pointer;
+    }
+  }
+
+  .navbar-header .navbar-brand {
+    padding: 0 0 0 130px;
+    height: auto;
+    font-family: 'robotobold';
+    color: #767676;
+    letter-spacing: 0px;
+    margin: 21px 0 0 25px;
+    background: url(../src/core/assets/images/logo.png) no-repeat;
+    background-size: auto 19px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .navbar-toggle{
+    display: inline-block;
+    margin: 0;
+    padding-left: 8px;
+
+    .icon-bar{
+      background: #307bd6 !important;
+      margin: 2px 0;
+      width: 22px;
+      height: 5px;
+    }
+
+    .menu-text {
+      font-size: 9px;
+      text-align: center;
+      padding: 2px 0 0 0;
+      display: inline-block;
+      color: #307bd6;
+      font-family: "Roboto-Light";
+    }
+  }
+}
+
+@media only screen and (max-width: 686px) {
+  .navbar-header .navbar-brand {
+    padding: 0 0 0 70px;
+    margin: 22px 0 0 15px;
+    background-size: auto 10px;
+    line-height: 11px;
+    font-size: 12px;
+  }
+
+  .last-updated span {
+    display: none;
+  }
+
+  .nokia-logout {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1031px) {
+  .navbar-header .navbar-brand span {
+    width: 0px;
+    display: inline-block;
+    overflow: hidden;
+  }
+}
+
+
+
+

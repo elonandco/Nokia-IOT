@@ -1,0 +1,98 @@
+
+.navbar-nav > li > a {
+  display: inline-block;
+  padding-bottom: 6px;
+  padding-top: 6px;
+  line-height: 20px;
+  background: #4889d8;
+  margin-left: 8px;
+
+}
+
+.navbar-right .logged-in-as {
+  float: left;
+  font-family: "Roboto-Thin";
+  margin-left: 48px;
+  font-size: .81em;
+  color: #fff;
+}
+
+.navbar-right .logged-in-as .fa-user {
+  margin-right: 4px;
+}
+
+.navbar > .container-fluid .navbar-brand {
+  background: url(../images/motive-logo-large@2x.png) 0 0 no-repeat;
+  background-size: 120px;
+  width: 150px;
+  height: 60px;
+  margin-left: 0;
+}
+
+.navbar-nav.login {
+  white-space: nowrap;
+  line-height: 32px;
+}
+
+body > .navbar-default {
+  background: #124191;
+  padding-top: 8px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  font-family: "Roboto-Light";
+  color: #fff;
+}
+
+.navbar-nav a > i {
+  margin-right: 8px;
+}
+
+.navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
+  background-color: #215ebf;
+  color: #fff;
+}
+
+.navbar-header .navbar-brand {
+  padding-top: 6px;
+}
+
+.navbar-default {
+  border: none;
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse.pull-right {
+    float: none !important;
+  }
+
+  ul.navbar-nav {
+    margin: 0;
+  }
+
+  .navbar-nav > li {
+    margin-bottom: 2px;
+  }
+
+  .navbar-nav > li > a {
+    display: block;
+    background: #4889d8;
+    margin-left: 0px;
+  }
+
+  .navbar-right .logged-in-as {
+    display: none;
+  }
+
+  .navbar-collapse {
+    padding: 0;
+  }
+
+  .navbar > .container-fluid .navbar-brand {
+    margin-left: 14px;
+  }
+}

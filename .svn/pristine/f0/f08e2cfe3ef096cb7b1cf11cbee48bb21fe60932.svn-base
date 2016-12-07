@@ -1,0 +1,17 @@
+<div class="wf-data-event">
+	<div class="spinner-container">
+	  <div class="progress-window page-loader">
+	    <div class="window">
+	      <h2 *ngIf="content?.header" [innerHTML]="content.header"></h2>
+	      <h2 *ngIf="!content?.header" [innerHTML]="header"></h2>
+	      <div class="lg spinner"></div>
+	      <div class="{{iconClass}}"></div>
+	      <h4 *ngIf="content?.body" [innerHTML]="content.body"></h4>
+	      <h4 *ngIf="!content?.body" [innerHTML]="message"></h4>
+	      <h4 *ngIf="content?.footer" [innerHTML]="content.footer"></h4>
+	    </div>
+	  </div>
+	</div>
+</div>
+
+

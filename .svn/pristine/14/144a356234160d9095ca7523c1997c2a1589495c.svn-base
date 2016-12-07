@@ -1,0 +1,11 @@
+<div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+  <div class="search-container">
+    Search: <input #gb type="text" pInputText size="50" style="float:left" >
+  </div>
+</div>
+<p-dataTable class="data-table" [value]="columnData" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50,100]" [pageLinks]="3" [responsive]="true"  [globalFilter]="gb" >
+    <p-column *ngFor="let col of columns" [field]="col.field" [header]="col.header" filterMatchMode="contains" [filter]="true" [sortable]="true"></p-column>
+</p-dataTable>
+
+
+

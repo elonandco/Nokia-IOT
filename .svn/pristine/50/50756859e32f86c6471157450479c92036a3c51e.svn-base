@@ -1,0 +1,161 @@
+import {Component,Input} from "@angular/core";
+import {CHART_DIRECTIVES, Highcharts} from 'angular2-highcharts';
+import Highcharts3d from 'highcharts/highcharts-3d';
+import {WidgetContentComponent} from "../../../../core/components/dashboard/widgets/widget-content.component";
+import {CampaignService} from '../../../../custom/components/dashboard/campaigns/campaign-widget-service';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Rx';
+import {ChartModel} from "../../../../core/models/chart.model";
+
+
+Highcharts3d(Highcharts);
+
+@Component({
+  selector:"widget-content",
+  templateUrl: "/src/custom/components/dashboard/campaigns/campaign-widget-content.component.html",
+  styles: [`
+    .campaign-piechart{
+        position: relative;
+        width: 100%;
+        height: 90%;
+        float:left;
+    }
+  `],
+  directives: [CHART_DIRECTIVES],
+  providers: [CampaignService]
+})
+
+export class CampaignsWidgetContentComponent extends WidgetContentComponent {
+
+  @Input()
+  set data(data:any){
+    if(data){
+      this.initGraph(data);
+    }
+  }
+
+  private options;
+  private date:string;
+  private chartModel: ChartModel = new ChartModel()
+  private _campaignService: CampaignService;
+  private userPreferences:Observable<any>;
+  private status:string = "";
+  private message:string = "";
+  private resultMessage:string = "";
+  private resultStats:string = "";
+  private resultCode:string = "";
+
+  constructor(private store:Store<any>,public _campaignService: CampaignService) {
+    super();
+    
+    this._campaignService = _campaignService;
+    let userPreferences = this.store.select('UserPreferencesReducer');
+        
+    if (userPreferences != undefined && userPreferences.widgets != undefined){
+      this.updateSettings(userPreferences.widgets);
+    }
+
+    userPreferences.subscribe(data => {
+      let $this = this;
+      this.updateSettings(data.widgets);
+      setTimeout(function(){$this.initGraph()},300);
+    });
+  }
+
+  showDetail():void {
+    console.log('showDetail firmware detail');
+    this._router.navigate(['EAP_IOT_VIEW_CAMPAIGNS']);
+  }
+
+  updateSettings(widgets:any){
+    this.widget = _.find(widgets, function (widget:any) {
+      return widget.id === "Campaigns"
+    });
+
+    if(this.chartModel && this.options){
+      this.chartModel = null;
+      this.options = null;
+    }
+
+    if (this.widget) {
+      if (this.widget.settings && this.widget.settings.hasOwnProperty('displayType')) {
+        this.displayType = this.widget.settings.displayType;
+      }
+
+      if (this.widget.settings && this.widget.settings.hasOwnProperty('showCount')) {
+        this.showCount = this.widget.settings.showCount;
+      }
+    }
+  }
+
+  initGraph(){
+    let all_campaigns = this._campaignService.getCampaign();
+    let campaigns = all_campaigns ? all_campaigns[_.map(all_campaigns, 'type').indexOf(this.displayType)] : [];
+    this.status = this._campaignService.status;
+    this.message = this._campaignService.message;
+    this.resultStatus = this._campaignService.resultStatus;
+    this.resultMessage = this._campaignService.resultMessage;
+    this.resultCode = this._campaignService.resultCode;
+
+    this.options = {
+          title: {
+              text: '',
+              x: -20 //center
+          },
+          subtitle: {
+              text: 'Pass 6 ' + campaigns.type,
+              align: 'left',
+              x: -10,
+              y: 0,
+              style: {
+                  color: '#000',
+                  fontSize: '14px'
+              }
+          },
+          xAxis: {
+              categories: campaigns.dates,
+              labels: {
+                style: {
+                    color: '#000'
+                }
+              }
+          },
+          yAxis: {
+              className: 'y-axis-text',
+              title: {
+                  text: 'No of Campaigns',
+                  style: {
+                      color: '#000',
+                      fontSize: '14px'
+                  },
+                  x: -16
+              },
+              plotLines: [{
+                  value: 0,
+                  width: 1,
+                  color: '#808080'
+              }]
+          },
+          plotOptions: {
+            line: {
+              dataLabels: {
+                enabled: this.showCount
+              }
+            }
+          },
+          tooltip: {
+              valueSuffix: ''
+          },
+          series: [{
+              name: ' ',
+              data: campaigns.numOfCampaigns
+          }],
+          credits: {
+              enabled: false
+          }
+    }
+
+
+  }
+
+}

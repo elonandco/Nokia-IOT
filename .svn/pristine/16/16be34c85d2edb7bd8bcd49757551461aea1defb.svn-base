@@ -1,0 +1,20 @@
+<div class="widget-scan">
+ <div *ngIf="code == '-1'">
+ 	{{message}}
+ </div>
+  <div class="columns" *ngIf="code != '-1'">
+    <span class="group-name">Name</span>
+    <span class="subgroups-name">Subgroups</span>
+  </div>
+  <ul class="scan-stats">
+    <li *ngFor="let group of _groups; let i = index">
+    <template [ngIf]="i<5">
+      <span>{{group.Name}}</span>
+      <div class="progress apps">
+        <div class="percent-bar" [ngStyle]="{'width': group.width}" ></div>
+        <div class="scan-percentage">{{group.Count}}</div>
+      </div>
+     </template> 
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,172 @@
+import {Injectable, Component, Input, Output} from "@angular/core";
+import {Location} from '@angular/common';
+import {WidgetContentComponent} from "../../../../core/components/dashboard/widgets/widget-content.component";
+import {FirmwareService} from '../../../../custom/components/dashboard/firmware/firmware-widget-service';
+import { NgFor } from '@angular/common';
+import {Observable} from 'rxjs/rx'
+import {Store} from '@ngrx/store'
+
+@Injectable()
+@Component({
+  selector: "widget-content",
+  templateUrl: "/src/custom/components/dashboard/firmware/firmware-widget-content.component.html",
+  //styleUrls: ['/src/custom/components/dashboard/firmware/firmware-widget.css'],
+  styles: [`
+    :host {
+        padding:0px;
+        width: 300px;
+        height:265px;
+        display: block;
+        clear:both;
+        margin:0px;
+        position: relative;
+    }
+    .firmware-text {
+      position: absolute;
+      top: 15px;
+      overflow: hidden;
+    }
+
+    .firmware-triangle:after {
+        background: linear-gradient(111deg, transparent 63%, #fff 63%), linear-gradient(-90deg, transparent 63%, #fff 63%), linear-gradient(to bottom, #0f68be, #000);
+        height: 100px;
+        width: 85px;
+        display: block;
+        content: '';
+    }
+
+    .firmware-chart {
+        background: url(../src/core/assets/images/updates.png) no-repeat left top / 99px auto;
+        height: 100%;
+        width: 99px;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        animation: graphic 1s linear;
+    }
+
+    .chart-title {
+        font-family: 'robotolight';
+        color: #333;
+        font-weight: 700;
+        display: inline-block;
+        position: relative;
+        top: -10px;
+     }
+
+.firmware-text span {
+    display: block;
+    line-height: 13px;
+    margin-top: 9px;
+    white-space: nowrap;
+    width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.firmware-text span.firmware0 {
+    margin-left: 107px;
+    margin-top: 0;
+}
+.firmware-text span.firmware1 {
+    margin-left: 100px;
+}
+.firmware-text span.firmware2 {
+    margin-left: 93px;
+}
+.firmware-text span.firmware3 {
+    margin-left: 86px;
+}
+.firmware-text span.firmware4 {
+    margin-left: 79px;
+}
+.firmware-text span.firmware5 {
+    margin-left: 72px;
+}
+.firmware-text span.firmware6 {
+    margin-left: 65px;
+}
+.firmware-text span.firmware7 {
+    margin-left: 58px;
+}
+.firmware-text span.firmware8 {
+    margin-left: 51px;
+}
+.firmware-text span.firmware9 {
+    margin-left: 44px;
+}
+.firmware-text span.firmware10 {
+    margin-left: 37px;
+}
+.firmware-text span.firmware11 {
+    margin-left: 30px;
+}
+.firmware-text span.firmware12 {
+    margin-left: 23px;
+    margin-bottom: 0;
+}
+
+       
+  @keyframes graphic {
+    from {height: 0}
+    to {height: 242px}
+   }
+    
+    text{
+        font-family: 'robotolight';
+        font-size: 14px;
+        color:#3e3e3e;
+    }`],
+  providers: [FirmwareService],
+  directives: [NgFor]
+})
+
+export class FirmwareWidgetContentComponent extends WidgetContentComponent {
+  private firmwares: Object[] = [];
+  private widget:any;
+  public sortInfo:any = {'field':'firmwareTimestamp','order':''};
+  private status:string = "";
+  private _firmwareService: FirmwareService;
+  private message:string = "";
+  _calculationConstant:number;
+  triangleHeight:number = 230;
+
+  constructor(private store:Store<any>, public _firmwareService: FirmwareService) {
+    super();
+    this._firmwareService = _firmwareService;
+
+    let userPreferences = this.store.value.UserPreferencesReducer;
+        
+    if (userPreferences != undefined && userPreferences.widgets != undefined){
+      this.updatePreferences(userPreferences.widgets);
+    }
+        
+    this.getDataBaseOnPreferences();
+        
+    this.userPrefObs = this.store.select('UserPreferencesReducer');
+    this.userPrefObs.subscribe(data =>{ 
+      this.updatePreferences(data.widgets)
+      this.getDataBaseOnPreferences();
+    });
+  }
+
+  getDataBaseOnPreferences(){
+      let _tempGroups = this._firmwareService.getfirmware();
+      this.firmwares = _.orderBy(_tempGroups, [this.sortInfo.field], [this.sortInfo.order]).reverse();
+      if (this.firmwares && this.firmwares.length > 0 ){
+    	  this.firmwares = this.firmwares.slice(0,12);
+      }
+      this.status = this._firmwareService.status;
+      this.message = this._firmwareService.message;
+  }
+
+  updatePreferences(widgets:any){
+    this.widget = _.find(widgets, function (widget:any) {
+      return widget.id === "Firmwares"
+    });
+    if (this.widget && this.widget.settings 
+        && this.widget.settings.hasOwnProperty('sortInfo')) {
+          this.sortType = (this.widget.settings.sortInfo.order === "asc") ? "Most Recent" : "Oldest"
+          this.sortInfo = this.widget.settings.sortInfo;
+    }
+  }
+}

@@ -1,0 +1,373 @@
+/**
+ * Created by jlmayorga on 4/21/16.
+ */
+
+import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
+import {ControlGroup, AbstractControl, Validators, FormBuilder} from '@angular/common';
+import {DynamicFormElementComponent} from './dynamic-form-element.component';
+import {
+  BaseFormElement,
+  FormElementValidation,
+  FormElementValidationType,
+  StaticFormElement,
+  TimeOfDayFormElement,
+  TextAreaFormElement,
+  CheckBoxFormElement,
+  RadioFormElement,
+  TextFormElement,
+  SelectFormElement,
+  DateFormElement,
+  FileFormElement
+} from './model/form-elements';
+import {StringMapWrapper} from '@angular/core/src/facade/collection';
+
+@Component({
+  selector: 'dynamic-form',
+  templateUrl: 'src/core/components/dynamic-form/dynamic-form.component.html',
+  directives: [DynamicFormElementComponent]
+
+})
+export class DynamicFormComponent implements OnChanges {
+  @Input() content:Array<any> = [];
+  @Input() data:Array<any> = [];
+  @Input() prevStepId:any;
+  @Output()
+  private handleSubmit = new EventEmitter<any>();
+  @Output()
+  private handleCancel = new EventEmitter<any>();
+  @Output()
+  private handleBack = new EventEmitter<any>();
+  @Output()
+  private handleSuspend = new EventEmitter<any>();
+  private formElements:Array<BaseFormElement<any>> = [];
+  private form:ControlGroup;
+  private payLoad = '';
+
+  constructor(private _fb:FormBuilder) {
+  }
+
+  ngOnChanges() {
+    this.formElements = this.getFormElements(this.data);
+    this.form = this.toControlGroup(this.formElements);
+    this.form.isSubmit = false;
+  }
+
+  private cancelWorkflow() {
+	  this.handleCancel.emit();
+  }
+
+
+  private suspendWorkflow() {
+	  this.handleSuspend.emit();
+  }
+
+  private handleBack() {
+	  this.handleBack.emit();
+  }
+
+  private handleReset() {
+    this.form['_touched'] = false;
+    StringMapWrapper.forEach(this.form.controls, (control:AbstractControl, name:string) => {
+      control['_touched'] = false;
+    });
+  }
+
+  private onSubmit() {
+    //adjust the format of the data for radio buttons to match what the workflow is expecting before creating the payload
+  
+    for (var prop in this.form.value) {
+      
+
+        let funcName = this.form.value[prop].constructor.name || this.form.value[prop].constructor.toString().match(/function (.{1,})\(/)[1]);
+
+        if (typeof this.form.value[prop] === 'object' && funcName === 'RadioButtonState') {
+            if (this.form.value[prop].checked) {
+                this.form.value[this.form.value[prop].value.split('_')[0]] = this.form.value[prop].value.split('_')[1];
+                delete this.form.value[prop];
+            } else {
+                delete this.form.value[prop];
+            }
+        }
+    }
+
+    this.payLoad = JSON.stringify(this.form.value);
+    this.handleSubmit.emit(this.payLoad);
+
+    //if submit button is present, disable it.
+    if(this.content.data.signalLabels.next.toLowerCase() === "submit"){ 
+      this.form.isSubmit = true;
+    }
+  }
+
+  /**
+   * Builds a Form ControlGroup based on the Form Elements passed as parameters and adds any validation that is specified in the Form Elements
+   *
+   * @param formElements
+   * @returns {ControlGroup}
+   */
+  private toControlGroup(formElements:BaseFormElement<any>[]) {
+    let controlGroup = {};
+    let passwordGroup = {};
+    let hiddenGroup = {};
+
+    formElements.forEach(formElement => {
+        let validations = [];
+        if (formElement.validations) {
+        formElement.validations.map((validation:FormElementValidation)=> {
+          switch (FormElementValidationType[validation.type]) {
+            case FormElementValidationType.required:
+              validations.push(Validators.required);
+              break;
+            case FormElementValidationType.pattern:
+              validations.push(Validators.pattern(validation.expression));
+              break;
+            case FormElementValidationType.maxlength:
+              validations.push(Validators.maxLength(validation.expression));
+              break;
+            case FormElementValidationType.minlength:
+              validations.push(Validators.minLength(validation.expression));
+              break;
+            case FormElementValidationType.equivalent:
+              validations.push(this.equivalent(formElement.key, validation.subKeys, false));
+              break;
+            case FormElementValidationType.notEquivalent:
+              validations.push(this.equivalent(formElement.key, validation.subKeys, true));
+              break;
+            case FormElementValidationType.fileType:
+              validations.push(this.fileType(validation.expression));
+              break;
+          }
+        });
+      }
+      controlGroup[formElement.key] = [formElement.value || '', Validators.compose(validations)];
+    });
+    return this._fb.group(controlGroup);
+  }
+
+  private fileType(type: string){
+      return (group: ControlGroup) => {
+          let ifValid = group.value.indexOf(type) !== -1;
+          return ifValid ? null : {fileType: false};
+      }
+  }
+
+
+  //a validation to check if multiple fields are equal or not equal
+  private equivalent(orignalKey: string, otherKeys: array, shouldMatch: boolean) {
+    return (group: ControlGroup) => {
+      let error = null
+      let i = 0;
+      //assume both values don't match
+      let isMatching = false;
+      //save value of first value. take out space and capital letters for acurate comparison
+      let originalValue = group.value.split(" ").join("").toLowerCase();
+      //lets figure out if the original value matches any other values..
+      let ifMatch = function(scope){
+        if(otherKeys){
+          for(i;i<otherKeys.length;i++){
+            //save the value for other field for later use
+            let controls = scope.form ? scope.form.controls : 0;
+            let otherKey = controls && controls.hasOwnProperty(otherKeys[i]) ? scope.form.controls[otherKeys[i]] : 0
+            let otherValue = otherKey ? otherKey.value.split(" ").join("").toLowerCase() : ""
+            //Account for SubControllers. If any, save them.
+            let subControl = scope.data[_.map(scope.data, 'key').indexOf(orignalKey)].subControl;
+            //Does this input control a hidden field? Is the input value Add New? If so, don't validate.
+            let ifAddNew = _.map(subControl, "subHiddenField").length && originalValue === "addnew"
+            //Compare values depending on validation type
+            let valuesCompared = shouldMatch ? originalValue !== otherValue : originalValue === otherValue;
+            //Set Proper Errors 
+            error = shouldMatch ? {notEquivalent: true} : {equivalent: false};
+            //Does the original and other value equal? Do they have values? Are we opening a hidden field?
+            isMatching = ((valuesCompared && originalValue.length && otherValue.length) || isMatching) && !ifAddNew;
+          }
+        }
+        return isMatching;
+      }
+      return (ifMatch(this)) ? error : null;
+    }
+  }
+
+  //updates dropdowns based off of another dropdown
+  private updateSubOptions(value:String,options:Array,subControl){
+      //retrieve all sub options
+      let sub_options = options[_.map(options, 'key').indexOf(value)].subOptions;
+      //out of all the sub options, retrieve the one defined as subOptionKey
+      let new_options = sub_options[_.map(sub_options, 'key').indexOf(subControl.subOptionKey)].options;
+      //apply new options
+      this.data[_.map(this.data, 'key').indexOf(subControl.key)].options = new_options;
+  }
+
+  //updates 
+  private updateSubStatus(change, subControl){
+    if(change.target.value.length){
+      this.data[_.map(this.data, 'key').indexOf(subControl.key)].status = subControl.subStatus;
+    }
+  }
+
+  private findKey(target:object){
+    let key = ""
+    if(target.classList.contains('hasDatepicker')){
+      key = target.parentNode.parentNode.id;
+    }else{
+      key = target.id
+    }
+    return key;
+  }
+
+  private updateHiddenField(value:String,options:Array,subControl:array){
+      let ifAddNew = (value === "Add New");
+      let ifFormValid = true;
+
+      //toggle visibility
+      this.data[_.map(this.data, 'key').indexOf(subControl.key)].id = ifAddNew ? "" : subControl.subHiddenField;
+
+      //toggle out the value since it may have validations. To Do: I feel like there is a better way to toggle validation
+      this.form.controls[subControl.key]['_status'] = ifAddNew ? "INVALID" : "VALID";
+      this.form.controls[subControl.key]['_touched'] = !ifAddNew
+      this.form.controls[subControl.key]['_pristine'] = ifAddNew
+      this.form.controls[subControl.key]['_value'] = "";
+      document.getElementById(subControl.key).value = "";
+
+      //loop through all control types to see if form is valid
+      StringMapWrapper.forEach(this.form.controls, (control:AbstractControl, name:string) => {
+              ifFormValid = control['_status'] === "VALID" && ifFormValid;
+      });
+
+      //set form status since we manually changed the validation on the hidden field
+      this.form['_status'] = ifFormValid ? "VALID" : "INVALID";
+  }
+
+  /**
+   * Takes the data passed as input and creates Form Elements
+   * @param data
+   * @returns {Array|Array}
+   */
+  private getFormElements(data:Array<any>):Array<BaseFormElement<any>> {
+
+    let jsonData:Array<any> = data.sort((a, b) => a.order - b.order);
+    let formElements = jsonData.map((jsonElement)=> {
+      let formElement = null;
+
+      if (jsonElement && jsonElement.controlType === 'dropdown') {
+        formElement = <SelectFormElement> jsonElement;
+      } else if (jsonElement && jsonElement.controlType == 'textbox') {
+        formElement = <TextFormElement> jsonElement;
+      } else if (jsonElement && jsonElement.controlType == 'date') {
+        formElement = <DateFormElement> jsonElement;
+      } else if (jsonElement && jsonElement.controlType == 'file') {
+        formElement = <FileFormElement> jsonElement;
+      } else if (jsonElement && jsonElement.controlType === 'radiogroup') {
+        formElement = jsonElement.options.map((entry)=> {
+          return new RadioFormElement({
+            groupId: jsonElement.key,
+            value: {checked: false, value: entry.value},
+            key: entry.label,
+            text: entry.text,
+            checked: entry.checked,
+            label: entry.label,
+            order: jsonElement.order || 5000,
+            controlType: 'radio'
+          })
+        });
+      } else if (jsonElement && jsonElement.controlType === 'checkbox') {
+        formElement = <CheckBoxFormElement> jsonElement;
+      }else if (jsonElement && jsonElement.controlType === 'timeofday') {
+        formElement = <TimeOfDayFormElement> jsonElement;
+      }else if (jsonElement && jsonElement.controlType === 'button') {
+        formElement = <CheckBoxFormElement> jsonElement;
+      } else if (jsonElement && jsonElement.controlType === 'textarea') {
+        formElement = <TextAreaFormElement> jsonElement;
+      } else if (jsonElement && jsonElement.controlType === 'static') {
+        formElement = <StaticFormElement> jsonElement;
+      }
+
+      return formElement;
+    });
+    //flatten nested arrays into a single dimension array
+    return this.flattenArray(formElements);
+  }
+
+  /**
+   * Flattens an array of arrays into a single array
+   *
+   * Example: Array ['1', '2' ,['3','4']] will be flattened to ['1','2','3','4']
+   *
+   * @param array
+   * @returns {Array}
+   */
+  private flattenArray(array) {
+    var toString = Object.prototype.toString;
+    var arrayTypeStr = '[object Array]';
+
+    var result = [];
+    var nodes = array.slice();
+    var node;
+
+    if (!array.length) {
+      return result;
+    }
+
+    node = nodes.pop();
+
+    do {
+      if (toString.call(node) === arrayTypeStr) {
+        nodes.push.apply(nodes, node);
+      } else {
+        result.push(node);
+      }
+    } while (nodes.length && (node = nodes.pop()) !== undefined);
+
+    result.reverse(); // reverse to restore original order
+    return result;
+  }
+
+  private formChangeEvent (change) {
+    //all configurations from dropdown element
+    let config = this.data[_.map(this.data, 'key').indexOf(this.findKey(change.target))];
+
+    if (change.target.getAttribute('type') === 'file') {
+      let file = change.target.files[0] || {name: ""}
+      let formElement = change.target.id;
+      let reader = new FileReader();
+      reader.onload = (function(formElement, formData) {
+        return function(event) {
+          formData.value[formElement] = this.result;
+        }
+      })(formElement, this.form);
+      //see if there is a validation
+      let validation = config.validations[_.map(config.validations, 'type').indexOf('fileType')];
+      let expression = validation ? validation.expression : "";
+      let ctrlElem = this.form.controls[formElement];
+
+      
+
+      if(expression !== ""){
+          //set validation. Does file extension right? Is there even a file uploaded?
+          let error = file.name.indexOf(expression) !== -1 ? null : {fileType: false};
+          ctrlElem.setErrors(error);
+          ctrlElem.markAsDirty();
+      }
+      if(file.name !== "") reader.readAsText(file);
+    }
+    //if its a element with sub control
+    if (config && config.subControl) {
+      //value selected from dropdown
+      let value = change.target.value;
+      //loop through all of the sub controls and apply options
+      for(var i = 0;i<config.subControl.length;i++){
+        //if subOptionKey is a property, update sub option
+        if(config.subControl[i].subOptionKey){
+          this.updateSubOptions(value,config.options,config.subControl[i]);
+        }
+        //if subHiddenField is a property, update hidden field
+        if(config.subControl[i].subHiddenField){
+          this.updateHiddenField(value,change.target.id,config.subControl[i])
+        }
+        //if subStatus is a property, update status of subcontrolled item
+        if(config.subControl[i].subStatus === ""){
+          this.updateSubStatus(change,config.subControl[i])
+        }
+      }
+    }
+  }
+}

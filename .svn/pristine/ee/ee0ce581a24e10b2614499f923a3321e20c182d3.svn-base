@@ -1,0 +1,34 @@
+<div>
+  <form (ngSubmit)="onSubmit()" (change)="formChangeEvent($event)" [ngFormModel]="form" class="form-horizontal">
+    <fieldset>
+      <df-element *ngFor="let formElement of formElements" [formElement]="formElement" [form]="form"></df-element>
+      <div class="col-md-8 form-group form-buttons">
+        <div class="pull-right">
+          <button type="button" *ngIf="!content?.isCancelButtonHidden" (click)="cancelWorkflow()"
+            class="btn btn-default">
+            <i *ngIf="content?.data?.signalLabels?.cancel" class="fa fa-angle-double-right"> {{content.data.signalLabels.cancel}}</i>
+            <i *ngIf="!content?.data?.signalLabels?.cancel" class="fa fa-angle-double-right">Cancel</i>
+    	  </button>
+	      <button type="button" *ngIf="!content?.isSuspendButtonHidden" (click)="suspendWorkflow()"
+	            class="btn btn-default">
+	            <i *ngIf="content?.data?.signalLabels?.suspend" class="fa fa-angle-double-right"> {{content.data.signalLabels.suspend}}</i>
+	            <i *ngIf="!content?.data?.signalLabels?.suspend" class="fa fa-angle-double-right">Suspend</i>
+	      </button>    	  
+	      <button *ngIf="prevStepId" (click)="handleBack('back')"
+            class="btn btn-default">
+            <i *ngIf="content?.data?.signalLabels?.back" class="fa fa-angle-double-right"> {{content.data.signalLabels.back}}</i>
+	        <i *ngIf="!content?.data?.signalLabels?.back" class="fa fa-angle-double-right">Back</i>
+    	  </button>
+          <button *ngIf="content?.data?.signalLabels?.reset" type="reset" class="btn btn-reset" (click)="handleReset()">
+	          <i *ngIf="content?.data?.signalLabels?.reset" class="fa fa-angle-double-right">{{content.data.signalLabels.reset}}</i>          
+          </button>
+          <button type="submit" class="btn btn-default btn-primary" [disabled]="!form.valid">
+	          <i *ngIf="content?.data?.signalLabels?.next" class="fa fa-angle-double-right">{{content.data.signalLabels.next}}</i>
+    	      <i *ngIf="!content?.data?.signalLabels?.next"class="fa fa-angle-double-right">Next</i>
+          </button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+

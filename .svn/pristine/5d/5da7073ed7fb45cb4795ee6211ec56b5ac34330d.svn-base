@@ -1,0 +1,10 @@
+<div class="spinner-container">
+  <div class="progress-window page-loader">
+    <div class="window">
+      <h2>{{header}}</h2>
+      <div class="lg spinner"></div>
+      <div class="{{iconClass}}"></div>
+      <h4>{{message}}</h4>
+    </div>
+  </div>
+</div>

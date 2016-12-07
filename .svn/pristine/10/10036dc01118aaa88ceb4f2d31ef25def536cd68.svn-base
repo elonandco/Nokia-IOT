@@ -1,0 +1,51 @@
+<div class="step-content">
+
+  <div>
+    <h3>{{data?.header}}</h3>
+  </div>
+  <div>
+    <h3>{{data?.body}}</h3>
+  </div>
+
+  <form [ngFormModel]="form" (ngSubmit)="onSubmit(form.value)">
+    <label><span>{{content?.prompt}}</span></label>
+
+    <input *ngIf="content?.multiline == false" [ngFormControl]="form.controls['promptInput']" type="text">
+        <textarea *ngIf="content?.multiline == true" [ngFormControl]="form.controls['promptInput']" name="Text1"
+                  cols="40" rows="5"></textarea>
+
+    <div *ngIf="promptInput.hasError('required')"
+         class="error">Prompt Input is invalid
+    </div>
+
+    <div *ngIf="promptInput.hasError('invalidPromptInput')"
+         class="error">Does not match input
+    </div>
+
+    <div>
+      <h3>{{data?.footer}}</h3>
+    </div>
+
+  </form>
+  <!-- Button Bar Div -->
+  <div class="pull-right step-actions">
+    <button *ngIf="workflowStep?.isDone" (click)="startWorkflow()" class="btn btn-default">
+      Restart Workflow
+    </button>
+    <button *ngIf="!content?.isCancelButonHidden && !workflowStep?.isDone" (click)="cancelWorkflow()"
+            class="btn btn-default">Cancel
+    </button>
+    <button *ngIf="!content?.isSuspendButtonHidden && !workflowStep?.isDone" (click)="suspendWorkflow()"
+            class="btn btn-default">
+      Suspend
+    </button>
+    <button *ngIf="!workflowStep?.isDone && workflowStep?.prevStepId" (click)="sendSignal('back')"
+            class="btn btn-default">Back
+    </button>
+    <button *ngFor="let signal of workflowStep?.validSignals" (click)="sendSignal(signal.name)"
+            class="btn"
+            [ngClass]="{'btn-primary' : signal.name=='next', 'btn-default':signal.name !='next'}">
+      {{signal.displayName}}
+    </button>
+  </div>
+</div>

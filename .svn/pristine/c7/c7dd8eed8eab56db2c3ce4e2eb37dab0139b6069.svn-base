@@ -1,0 +1,17 @@
+<div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+  <workflow-component *ngIf="workflowActive" [workflowName]="workflowName" [headless]="true" (isDone)="isDone($event)"></workflow-component>
+  <i class="fa fa-search" style="margin:4px 0 0 4px;float:right;"></i>
+  <input #gb type="text" pInputText size="20" placeholder="Search" style="margin:4px 0 0 4px;float:right;">
+</div>
+<p-dataTable class="data-table five-columns filters-on-bottom" [value]="people" [rows]="20" [paginator]="true" [rowsPerPageOptions]="[10,25,50,100]" [pageLinks]="3" [responsive]="true"  [globalFilter]="gb">
+  <div class="ui-data-table">
+    <header>Responsive</header>
+    <p-column field="First Name" header="First Name" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+    <p-column field="Last Name" header="Last Name" [filter]="true" [sortable]="true"  filterMatchMode="contains"></p-column>
+    <p-column field="User Name" header="User Name" [filter]="true" [sortable]="true"  filterMatchMode="contains"></p-column>
+    <p-column field="Role" header="Role" [filter]="true" [sortable]="true"  filterMatchMode="contains"></p-column>
+    <p-column field="Group" header="Group" [filter]="true" [sortable]="true"  filterMatchMode="contains"></p-column>
+  </div>
+</p-dataTable>
+
+

@@ -1,0 +1,18 @@
+[
+    {
+        "manufacturer": "Chevrolet",
+        "models": 213
+    },
+    {
+        "manufacturer": "GMC",
+        "models": 23
+    },
+    {
+        "manufacturer": "Buick",
+        "models": 19
+    },
+    {
+        "manufacturer": "Cadillac",
+        "models": 45
+    }
+]

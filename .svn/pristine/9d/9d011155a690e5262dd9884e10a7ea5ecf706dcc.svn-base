@@ -1,0 +1,69 @@
+import {AbstractNode} from './abstract-node';
+import {Component, Input} from '@angular/core';
+import {Router} from '@angular/router-deprecated';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Rx';
+
+@Component({
+  selector: 'data-event-node',
+  templateUrl: 'src/core/components/workflow/nodes/data-event-node.component.html'
+
+})
+
+/**
+ * Created by jlmayorga on 4/11/16.
+ */
+export class DataEventNodeComponent extends AbstractNode {
+  	@Input()
+  	private header:string = '';
+  	@Input()
+  	private message:string = 'Just a moment while your preferences are loaded.';
+  	@Input()
+  	private iconClass:string = 'ko-user-admin';
+
+  	constructor(private _store:Store<any>, public _router:Router) {
+    	this._store = _store;
+    	this.dsoObs = this._store.select('DSOModelReducer');
+      this.initWorkflow = this._store.select('InitWorkflowReducer');
+
+      this.dsoObs.subscribe((data:any)=> {
+          this.data = data || {};
+          this.updateHeader()
+        },
+        error => {
+
+        }
+      );
+      
+      this.initWorkflow.subscribe((data:any)=> {
+          this.initDone = data.status === "completed";
+          this.updateHeader()
+        },
+        error => {
+
+        }
+      );
+    }
+
+  ngOnInit() {
+    this.updateHeader();  
+  }
+
+	updateHeader(){
+	this.header = "Loading"
+			
+    if(!this.initDone && this.data){
+  		if (this.data.hasOwnProperty('firstName')){
+  	  		this.header = "Hello " + this.data.firstName;
+  	  	}
+  	  	if (this.data.hasOwnProperty('lastName')){
+  	  		if (this.header == "Loading"){ 
+  	  			this.header = "Hello " + this.data.lastName + "!";
+  	  		}else {
+  	  			this.header += " " + this.data.lastName + "!";
+  	  		}
+  	  	}  	  	
+    }
+  }
+}
+

@@ -1,0 +1,27 @@
+<div class="groups-widget-settings">
+  <span class="include">Sort by Subgroups</span>
+  <ul>
+    <li>
+      <label class="radio-inline">
+        <input type="radio" #SubgroupsAsc (click)="sortInfo = SubgroupsAsc.value"  name="groupsRadioGroup" [checked]='sortInfo.field === "Count" && sortInfo.order === "asc"' value='{"field":"Count","order":"asc"}'> Ascending
+      </label>
+      <label class="radio-inline">
+        <input type="radio" #SubgroupsDesc (click)="sortInfo = SubgroupsDesc.value" name="groupsRadioGroup" [checked]='sortInfo.field === "Count" && sortInfo.order === "desc"' value='{"field":"Count","order":"desc"}'> Descending
+      </label>
+
+    </li>
+  </ul>
+
+  <span class="include">Sort by Groups</span>
+  <ul>
+    <li>
+      <label class="radio-inline">
+        <input type="radio" #GroupsAsc (click)="sortInfo = GroupsAsc.value" name="groupsRadioGroup" [checked]='sortInfo.field === "Name" && sortInfo.order === "asc"' value='{"field":"Name","order":"asc"}'> A-Z
+      </label>
+      <label class="radio-inline">
+        <input type="radio" #GroupsDesc (click)="sortInfo = GroupsDesc.value"  name="groupsRadioGroup" [checked]='sortInfo.field === "Name" && sortInfo.order === "desc"'  value='{"field":"Name","order":"desc"}'> Z-A
+      </label>
+    </li>
+  </ul>
+
+</div>

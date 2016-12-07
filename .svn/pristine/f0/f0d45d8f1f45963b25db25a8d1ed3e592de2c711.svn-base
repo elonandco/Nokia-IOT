@@ -1,0 +1,28 @@
+<div class="campaign-widget-settings">
+  <span class="include">Include</span>
+  <ul>
+    <li>
+      <toggle-button isOn="{{firmwareInclude}}" (toggle)="firmwareToggle(link)"></toggle-button>
+      <span class="activity">Firmwares</span>
+    </li>
+    <li>
+      <toggle-button isOn="{{configInclude}}" (toggle)="configToggle(link)"></toggle-button>
+      <span class="activity">Configurations</span>
+    </li>
+  </ul>
+
+  <span class="include">Display</span>
+  <ul>
+    <li>
+
+      <label class="radio-inline">
+        <input type="radio" name="campaignDisplayRadioGroup" [checked]='displayType === "percentage"' value="percentage" (change)="onDisplayChange()"> Percentage
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="campaignDisplayRadioGroup" [checked]='displayType === "count"'  value="count" (change)="onDisplayChange()"> Count
+      </label>
+
+    </li>
+  </ul>
+
+</div>

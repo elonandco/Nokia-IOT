@@ -1,0 +1,4 @@
+<div class="sidebar-container" [ngClass]="{'open': sidebarActive}" >
+  <sidebar-groups [show]="(whoActive | async) === 'group'" [treeData]="treeJson"></sidebar-groups>
+  <sidebar-widgets [show]="(whoActive | async) === 'widget'"></sidebar-widgets>
+</div>

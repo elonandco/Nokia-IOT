@@ -1,0 +1,37 @@
+.ko-campaigns:before {
+  content: "\e901";
+}
+.campaign-widget-settings ul:first-child {
+    padding: 0;
+}
+.highcharts-background {
+  fill: none;
+ }
+ .highcharts-yaxis-title {
+ 		fill: #000;
+ 		color: #000;
+ }
+ .highcharts-legend-item {
+ 		//display: none;
+ }
+ .highcharts-container text {
+		font-family: "Roboto-Light";
+ }
+.highcharts-container {
+    width: 100% !important;
+}
+.highcharts-container svg {
+    width: 100% !important;
+}
+.campaign-widget-settings{
+  li{
+    list-style: none;
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    display: inline-block;
+    width: 100%;
+  }
+
+
+}
+

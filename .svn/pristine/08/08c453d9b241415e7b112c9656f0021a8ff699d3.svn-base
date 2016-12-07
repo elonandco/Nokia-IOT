@@ -1,0 +1,7 @@
+<div class="toggle btn btn-default" >
+  <div class="toggle-group" (click)="onClick()" [ngClass]="{switch:!isToggled}" >
+    <label class="btn btn-primary toggle-on">{{on}}</label>
+    <label class="btn btn-default active toggle-off">{{off}}</label>
+  </div>
+</div>
+

@@ -1,0 +1,27 @@
+<div class="devices-widget-settings">
+  <span class="include">Sort by Model</span>
+  <ul>
+    <li>
+      <label class="radio-inline">
+        <input type="radio" #ModelAsc (click)="sortInfo = ModelAsc.value"  name="deviceModelRadioGroup" [checked]='sortInfo.field === "Models" && sortInfo.order === "asc"' value='{"field":"Models","order":"asc"}'> Ascending
+      </label>
+      <label class="radio-inline">
+        <input type="radio" #ModelDesc (click)="sortInfo = ModelDesc.value" name="deviceModelRadioGroup" [checked]='sortInfo.field === "Models" && sortInfo.order === "desc"' value='{"field":"Models","order":"desc"}'> Descending
+      </label>
+
+    </li>
+  </ul>
+
+  <span class="include">Sort by Manufacturer</span>
+  <ul>
+    <li>
+      <label class="radio-inline">
+        <input type="radio" #ManufacturerAsc (click)="sortInfo = ManufacturerAsc.value" name="deviceModelRadioGroup" [checked]='sortInfo.field === "Manufacturer" && sortInfo.order === "asc"' value='{"field":"Manufacturer","order":"asc"}'> A-Z
+      </label>
+      <label class="radio-inline">
+        <input type="radio" #ManufacturerDesc (click)="sortInfo = ManufacturerDesc.value"  name="deviceModelRadioGroup" [checked]='sortInfo.field === "Manufacturer" && sortInfo.order === "desc"'  value='{"field":"Manufacturer","order":"desc"}'> Z-A
+      </label>
+    </li>
+  </ul>
+
+</div>

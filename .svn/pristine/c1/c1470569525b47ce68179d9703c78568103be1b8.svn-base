@@ -1,0 +1,77 @@
+.page-wrapper{
+  .component-container{
+    background: #EAEAEA;
+    padding: 15px;
+    border-radius: 10px;
+    width: 90%;
+    margin: 0 auto;
+
+    .component-header{
+      margin: 0 0 15px 0;
+      padding: 0 0 0 0!important;
+      color: #3AB8EF;
+
+      .header-icons{
+        float: right;
+        cursor: pointer;
+      }
+
+    }
+
+    .campaign-container{
+      .button-container{
+        position: absolute;
+        top: 65px;
+      }
+
+      .btn{
+        margin-right: 15px;
+      }
+
+      .btn:hover{
+        background-color: #215EBF;
+      }
+
+      .ui-paginator-bottom{
+
+        .ui-state-disabled{
+          cursor: not-allowed!important;
+        }
+
+        .ui-paginator-next:hover, .ui-paginator-last:hover, .ui-paginator-first:hover, .ui-paginator-prev:hover{
+          background: white;
+        }
+
+        .ui-paginator-pages{
+          .ui-state-active{
+            background: #3AB8EF !important;
+            border-color: #AAA;
+            color: white;
+          }
+        }
+
+        .ui-paginator-element{
+          border-radius: 20px !important;
+          background: #CCC;
+          color: #000;
+          height: 34px;
+          width: 34px;
+          padding: 7px;
+          opacity: 1;
+          border: 0;
+          box-shadow: none;
+
+          span{
+            font-size: 18px;
+          }
+
+
+
+
+        }
+      }
+
+    }
+  }
+}
+

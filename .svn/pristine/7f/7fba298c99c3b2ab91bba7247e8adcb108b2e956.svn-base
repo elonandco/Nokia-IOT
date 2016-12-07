@@ -1,0 +1,48 @@
+<div class="step-content">
+  <div>
+    <h3 [innerHTML]="workflowStep?.content?.header"></h3>
+  </div>
+  <div>
+    <p [innerHTML]="workflowStep?.content?.body"></p>
+  </div>
+  <fieldset *ngIf="selectionType == 'single'">
+    <div *ngFor="let option of options">
+      <input name="options" type="radio" value="{{option.value}}" (click)="setSelectedValue(option.value)">{{option.name}}
+    </div>
+  </fieldset>
+  <fieldset *ngIf="selectionType == 'multiple'">
+    <label *ngFor="let option of options">
+      <input type="checkbox" name="{{option.name}}" value="{{option.value}}">{{option.value}}
+    </label>
+  </fieldset>
+  <fieldset *ngIf="selectionType == 'dropdown'">
+    <select>
+      <option *ngFor="let option of options" value="{{option.value}}">{{option.name}}</option>
+    </select>
+  </fieldset>
+  <div>
+    <p [innerHTML]="workflowStep?.content?.footer"></p>
+  </div>
+  <!-- Button Bar Div -->
+  <div class="pull-right step-actions">
+    <button *ngIf="workflowStep?.isDone" (click)="startWorkflow()" class="btn btn-default">
+      Restart Workflow
+    </button>
+    <button *ngIf="!content?.isCancelButonHidden && !workflowStep?.isDone" (click)="cancelWorkflow()"
+            class="btn btn-default">Cancel
+    </button>
+    <button *ngIf="!content?.isSuspendButtonHidden && !workflowStep?.isDone" (click)="suspendWorkflow()"
+            class="btn btn-default">
+      Suspend
+    </button>
+    <button *ngIf="!workflowStep?.isDone && workflowStep?.prevStepId" (click)="sendSignal('back')"
+            class="btn btn-default">Back
+    </button>
+    <button *ngFor="let signal of workflowStep?.validSignals" (click)="handleSignal(signal.name)"
+            class="btn"
+            [ngClass]="{'btn-primary' : signal.name=='next', 'btn-default':signal.name !='next'}">
+      {{signal.displayName}}
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,10 @@
+<div class="workflow-template">
+  <div class="workflow-inner">
+      <div class="workflow-header">
+        <div class="workflow-title"><span class="workflow-icon ko-lock"></span>Reset Password</div>
+        <span class="header-icons ko-x" (click)="onClose($event)"></span>
+      </div>
+      <workflow-component *ngIf="workflowActive" [workflowName]="workflowName" [headless]="false" (isDone)="isDone($event)">
+      </workflow-component>
+  </div>
+</div>

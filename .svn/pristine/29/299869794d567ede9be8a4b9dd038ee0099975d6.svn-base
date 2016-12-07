@@ -1,0 +1,113 @@
+ {
+  "server": {
+    "url": "https://127.0.0.1",
+    "pollingInterval": 1000
+  },
+  "workflow": {
+    "initWorkflowName": "EAP_IOT_BEGIN_DASHBOARD",
+    "channel": "ssc",
+    "showBreadcrumbs": true,
+    "breadcrumbIgnoredNodes":["dataevent"]
+  },
+  "widgets": [
+    {
+      "component": "CampaignsWidgetComponent",
+      "path": "src/custom/components/dashboard/campaigns/campaign-widget.component",
+      "metadata":{
+        "iconClass":"ko-campaigns",
+        "title":"Campaigns"
+      },
+      "defaultSettings":{
+        "firmwareInclude":true,
+        "configInclude":false,
+        "displayType":"percentage"
+      }
+    },
+    {
+      "component": "SystemOverviewWidgetComponent",
+      "path": "src/custom/components/dashboard/system-overview/system-overview-widget.component",
+      "metadata":{
+        "iconClass":"ko-system-overview",
+        "title":"System Overview"
+      }
+    },
+    {
+      "component": "RecentActivityWidgetComponent",
+      "path": "src/custom/components/dashboard/recent-activity/recent-activity-widget.component",
+      "metadata": {
+        "iconClass": "ko-recent-activity",
+        "title": "System Overview"
+      }
+    },
+    {
+      "component": "FirmwaresWidgetComponent",
+      "path": "src/custom/components/dashboard/firmware/firmware-widget.component",
+      "metadata":{
+        "iconClass":"ko-ram",
+        "title":"Firmware"
+      },
+      "defaultSettings":{
+        "sortInfo": {"field":"firmwareTimestamp","order":"asc"}
+      }
+    },
+    {
+      "component": "UsersWidgetComponent",
+      "path": "src/custom/components/dashboard/users/users-widget.component",
+      "metadata":{
+        "iconClass":"ko-user",
+        "title":"Users"
+      },
+      "defaultSettings":{
+        "displayCount":false
+      }
+    },
+    {
+      "component": "GroupsWidgetComponent",
+      "path": "src/custom/components/dashboard/groups/groups-widget.component",
+      "metadata":{
+        "iconClass":"ko-user-group",
+        "title":"Groups"
+      },
+      "defaultSettings":{
+      	"sortInfo": {"field":"Name","order":"asc"}
+      }
+    },
+    {
+      "component": "DevicesWidgetComponent",
+      "path": "src/custom/components/dashboard/devices/devices-widget.component",
+      "metadata":{
+        "iconClass":"ko-smart-phone",
+        "title":"Devices"
+      },
+      "defaultSettings":{
+      	"sortInfo": {"field":"Manufacturer","order":"asc"}
+      }
+    }
+  ],
+  "links": [
+    {
+      "component": "UserLinkComponent",
+      "path": "src/core/components/dashboard/quick-links/user-link.component",
+      "metadata":{
+        "iconClass":"ko-user",
+        "title":"Request user"
+      }
+    },
+    {
+      "component": "GroupLinkComponent",
+      "path": "src/core/components/dashboard/quick-links/group-link.component",
+      "metadata":{
+        "iconClass":"ko-user-group",
+        "title":"Request Group"
+      }
+    },
+    {
+      "component": "DeviceQuickLinkComponent",
+      "path": "src/custom/components/dashboard/quick-links/device-quick-link.component" ,
+      "metadata":{
+        "iconClass":"ko-device",
+        "title":"Device"
+      }
+    }
+  ]
+}

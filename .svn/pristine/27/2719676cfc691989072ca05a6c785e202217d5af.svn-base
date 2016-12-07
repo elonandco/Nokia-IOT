@@ -1,0 +1,4 @@
+body div[id^="tt-mt-tooltip-"].popover {
+  display: block;
+  font-size: .8em;
+}

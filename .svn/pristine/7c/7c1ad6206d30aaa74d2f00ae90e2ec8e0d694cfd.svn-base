@@ -1,0 +1,63 @@
+<div *ngIf="headless">
+  <spinner-component>-</spinner-component>
+</div>
+<div *ngIf="!headless">
+  <div *ngIf="_executionStatus == _executionStautsEnum.STARTING">
+    <spinner-component>-</spinner-component>
+  </div>
+  <div *ngIf="_executionStatus != _executionStautsEnum.STARTING">
+    <div class="content-wrap">
+      <div class="table-wrap">
+        <nav class="wizard">
+          <ul *ngIf="breadcrumbs" class="nav nav-pills nav-justified">
+            <li class="step" *ngFor="let breadcrumb of breadcrumbs" (click)="gotoStep(breadcrumb.stepId, breadcrumb.name)">
+              <a>{{breadcrumb.name}}</a>
+            </li>
+          </ul>
+        </nav>
+        <h3 [innerHTML]="_wfExec?.step?.content?.header" style="min-height:3px;"></h3>
+        <div class="row">
+          <div class="form-horizontal workflow-content" *ngIf="_wfExec?.step?.template"
+               [ngSwitch]="_wfExec?.step?.template">
+
+            <workflow-wait-node *ngSwitchWhen="'wait'" [content]="_wfExec?.step?.content"
+                                [workflowStep]="_wfExec?.step"
+                                (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-wait-node>
+			<workflow-wait-node *ngSwitchWhen="'no_step'" [content]="_wfExec?.step?.content"
+                                [workflowStep]="_wfExec?.step"
+                                (onSignalEvent)="handleSignal($event)"></workflow-wait-node>
+            <workflow-info-node *ngSwitchWhen="'info'" [content]="_wfExec?.step?.content" [workflowStep]="_wfExec?.step"
+                                (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-info-node>
+            <workflow-prompt-node *ngSwitchWhen="'prompt'" [content]="_wfExec?.step?.content"
+                                  [workflowStep]="_wfExec?.step"
+                                  (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-prompt-node>
+            <workflow-menu-node *ngSwitchWhen="'menu'" [content]="_wfExec?.step?.content" [workflowStep]="_wfExec?.step"
+                                (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-menu-node>
+            <workflow-selector-node *ngSwitchWhen="'selector'" [content]="_wfExec?.step?.content"
+                                    [workflowStep]="_wfExec?.step"
+                                    (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-selector-node>
+            <workflow-form-node *ngSwitchWhen="'form'" [content]="_wfExec?.step?.content" [workflowStep]="_wfExec?.step"
+                                (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-form-node>
+            <workflow-question-node *ngSwitchWhen="'question'" [content]="_wfExec?.step?.content"
+                                    [workflowStep]="_wfExec?.step"
+                                    (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-question-node>
+            <workflow-multiinput-node *ngSwitchWhen="'multiinput'" [content]="_wfExec?.step?.content"
+                                      [workflowStep]="_wfExec?.step"
+                                      (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></workflow-multiinput-node>
+            <data-event-node *ngSwitchWhen="'dataevent'" [content]="_wfExec?.step?.content"
+                             [workflowStep]="_wfExec?.step"
+                             (onSignalEvent)="handleSignal($event)" (onCancelWorkflowEvt)="cancelWorkflow()" (onSuspendWorkflowEvt)="suspendWorkflow()"></data-event-node>
+            <div *ngSwitchWhen="'done'">
+<!--               <span>Workflow execution has ended, please restart the workflow or close the window.</span> -->
+            </div>
+            <div *ngSwitchDefault>Template {{_wfExec?.step?.template}} not supported!</div>
+            <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+              <p><span>Oh snap! An error happened while trying to execute a workflow</span></p>
+              <p><span>{{errorMessage}}</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

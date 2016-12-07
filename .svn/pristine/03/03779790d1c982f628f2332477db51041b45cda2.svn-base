@@ -1,0 +1,30 @@
+<div class="items">
+  <span class="item-number">23</span>
+  <span class="ko-user-group item-icon" style="cursor: pointer;"></span>
+  <span class="item-name">Groups</span>
+</div>
+<div class="items">
+  <span class="item-number">19</span>
+  <span class="item-icon ko-clock" style="cursor: pointer;"></span>
+  <span class="item-name">Campaigns</span>
+</div>
+<div class="items">
+  <span class="item-number">55</span>
+  <span class="item-icon ko-grid-1" style="cursor: pointer;"></span>
+  <span class="item-name">Apps</span>
+</div>
+<div class="items">
+  <span class="item-number">108</span>
+  <span class="item-icon ko-user" style="cursor: pointer;"></span>
+  <span class="item-name">Users</span>
+</div>
+<div class="items">
+  <span class="item-number">6</span>
+  <span class="item-icon ko-ram" style="cursor: pointer;"></span>
+  <span class="item-name">Updates</span>
+</div>
+<div class="items">
+  <span class="item-number">45</span>
+  <span class="item-icon ko-smart-phone" style="cursor: pointer;"></span>
+  <span class="item-name">Devices</span>
+</div>

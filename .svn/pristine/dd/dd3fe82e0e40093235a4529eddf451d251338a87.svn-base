@@ -1,0 +1,343 @@
+.workflow-template {
+    background-color: #f8f8f8;
+    padding: 40px 0;
+}
+.workflow-template .workflow-inner {
+    width: 960px;
+    margin: 0 auto 0 auto;
+    background: #EAEAEA;
+    border-radius: 10px;
+}
+.workflow-template .workflow-content .step-content .list-items {
+    display: block;
+    margin: 0;
+}
+.workflow-template .form-group.timeofday .form-control-static {
+    display: none;
+}
+.workflow-template .workflow-content {
+    min-height: initial;
+}
+.workflow-template .form-horizontal .control-label {
+    width: 34%;
+}
+.workflow-template .form-horizontal .form-group {
+    display: inline-block;
+    width: 100%; 
+}
+.workflow-template .form-group.policyDate {
+    float: left;
+    width: 65%;
+    margin: 0 0 15px 0;
+}
+.workflow-template .form-group.policyDate .control-label {
+    float: left;
+    width: 50.5%;
+}
+.workflow-template .form-group.policyDate .control-input {
+    width: 48%;
+    padding: 0 0 0 10px;
+}
+.workflow-template .form-group.staticText {
+    float: left;
+    margin: 0 0 15px 0;
+    width: auto;
+}
+.workflow-template .form-group.staticText .control-label {
+    display: none;
+}
+.form-group.staticText .control-input {
+    padding: 0;
+    width: 110%;
+}
+.workflow-template .workflow-content .step-content h3 {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+}
+.workflow-template .form-group.hide-input {
+    display: none;
+}
+.workflow-template .timeofday .control-input {
+    float: right;
+    width: 31%;
+    padding-left: 0;
+}
+.workflow-template .form-group.time {
+    display: inline-block;
+    width: 13%;
+    vertical-align: top;
+    margin: 0 0 15px 0;
+}
+.workflow-template .form-group.amPM {
+    display: inline-block;
+    width: 36%;
+    vertical-align: top;
+    margin: 0 0 15px 0;
+}
+.workflow-template .form-group.time .control-input,
+.workflow-template .form-group.amPM .control-input {
+    width: 100%;
+}
+.btn-default i {
+    position: relative;
+    top: 2px;
+}
+.workflow-template .form-group.timeofday {
+    width: 50%;
+    display: inline-block;
+    margin: 0 -5px 15px 0px;
+}
+.workflow-template .form-group.time label,
+.workflow-template .form-group.amPM label {
+    display: none;
+}
+.workflow-template .timeofday label {
+    width: 300px;
+}
+.workflow-template .workflow-content .step-content p {
+    display: inline-block;
+    max-width: none;
+    color: #000;
+    font-size: 14px;
+}
+.workflow-template .workflow-content .step-content .form-error .col-md-4 {
+    margin: 0;
+    line-height: normal;
+    padding-top: 0;
+}
+.workflow-template .workflow-content .step-content .form-error .form-control-static {
+    min-height: initial;
+    padding: 0;
+    color: #a94442;
+}
+.workflow-template .btn-default[disabled] {
+    background-color: #ccc;
+    color: #000;
+    opacity: .65;
+}
+.workflow-template .btn-default[disabled] i {
+    color: #000;
+}
+.content-wrap .wizard .nav-pills > li.step > a {
+      color: #fff;
+      line-height: 21px;
+}
+.nav-justified>li {
+      background: #4889D8;
+}
+.workflow-template .btn-primary {
+    background: #333;
+    opacity: 1;
+    color: #fff;
+}
+.workflow-content .step-content .step-actions {
+    float: right;
+}
+.workflow-template .btn-reset i {
+    position: relative;
+    top: 2px;
+}
+.workflow-template .btn-default i {
+    opacity: 1;
+}
+.workflow-template #hide-target,
+.workflow-template #hide-source {
+    display:none;
+}
+.workflow-template .workflow-content .step-content .workflow-info {
+    padding: 0 40px;
+}
+.workflow-template .workflow-content .step-content .workflow-info .col-md-6 {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    padding: 0;
+}
+.workflow-template .workflow-content .step-content .workflow-info .control-label {
+    display: none;
+}
+.workflow-template .table-wrap {
+    margin: 0;
+    padding: 0 5px;
+}
+.workflow-template .workflow-content .step-content {
+    min-height: inherit;
+    padding: 0;
+}
+.workflow-template .workflow-header {
+    display: inline-block;
+    width: 100%;
+    padding: 30px 15px 0 15px;
+}
+.workflow-template .workflow-template .table-wrap {
+    padding: 5px 0 0 0;
+    margin: 0 5px;
+}
+.workflow-template .workflow-header .ko-x {
+    float: right;
+    font-size: 22px;
+    color: #124191;
+    line-height: 31px;
+    cursor: pointer;
+}
+.workflow-template .workflow-title {
+    font-size: 22px;
+    float: left;
+    color: #124191;
+    text-transform: uppercase;
+}
+.workflow-template .workflow-icon {
+    color: #999;
+    margin: 0 5px;
+}
+.workflow-template .form-buttons {
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+.content-wrap {
+  background: #EAEAEA;
+  padding: 15px;
+  border-radius: 10px;
+  width: 960px;
+  margin: 0 auto;
+  h2 {
+    margin: 0 0 10px 0;
+    color: #124191;
+    padding: 15px 15px 15px 30px;
+    text-align: left;
+    position: relative;
+    text-transform: uppercase;
+  }
+  .row {
+    background: transparent;
+    margin: 5px;
+  }
+  .nav>li>a:focus, .nav>li>a:hover {
+    background: initial;
+    color: initial;
+  }
+  .wizard {
+    margin-top: 0;
+    .nav-pills > li.step > a {
+      padding: 10px 15px 10px 30px;
+    }
+    .nav-pills > li > a:before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 27px 0 27px 20px;
+      border-color: transparent transparent transparent #EAEAEA;
+      position: absolute;
+      margin-right: -18px;
+      top: -7px;
+      right: -2px;
+      z-index: 2;
+    }
+    .nav-pills > li > a:after {
+      content: "";
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 20px 0 20px 15px;
+      border-color: transparent transparent transparent #4889D8;
+      position: absolute;
+      margin-right: -15px;
+      top: 0px;
+      right: 0px;
+      z-index: 3;
+    }
+
+    .nav-pills > li:last-child{
+      background: #3AB8EF;
+    }
+
+    .nav-pills > li:last-child > a:after {
+      border-color: transparent;
+      background: transparent;
+    }
+
+    .nav-pills > li:last-child > a:before {
+      border-color: transparent;
+    }
+
+    .nav-pills > li.active > a:after {
+      border-color: transparent transparent transparent #3AB8EF;
+    }
+    .nav-pills > li.visited > a:after {
+      border-color: transparent transparent transparent #4889D8;
+    }
+    .nav-pills > li > a {
+      border-radius: 0px;
+      margin: 0 1px;
+      height: 40px;
+      position: relative;
+      outline: 0;
+      color: #333;
+      white-space: nowrap;
+      text-align: left;
+    }
+    .nav-pills > li.active > a {
+      background: #3AB8EF;
+      border-radius: 0px;
+      margin: 0 1px;
+      color: #FFF;
+      position: relative;
+    }
+    .nav-pills > li.visited > a {
+      background: #4889D8;
+      border-radius: 0px;
+      margin: 0 1px;
+      color: #FFF;
+      position: relative;
+    }
+
+    .nav-pills.nav-justified {
+      background: #ccc;
+      overflow: hidden;
+    }
+
+  }
+
+  .step a:after {
+    border-color: transparent transparent transparent #3AB8EF;
+  }
+
+  .step .step a {
+    color: #fff;
+    background: #3AB8EF;
+  }
+}
+
+.select-group {
+  text-align: left;
+  margin: -30px 0px 5px 0px;
+  font-weight: bold;
+}
+
+.workflow-content {
+  min-height: 300px;
+
+  .step-content {
+    position: relative;
+    min-height: 300px;
+
+    .step-actions {
+      bottom: 0;
+      right: 0;
+    }
+  }
+
+  .wf-data-event {
+    h2 {
+      font-size: 32px;
+      color: #4889d8;
+      text-align: center;
+      padding: 0;
+      text-transform: none;
+    }
+  }
+}
+

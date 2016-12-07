@@ -1,0 +1,14 @@
+<div class="app-container">
+  <navbar-header [isHeaderMenuActive]="isHeaderMenuActive" [isMenuActive]="isMenuActive"></navbar-header>
+  <menu [services]="domainView.services" (menuToggle)="menuToggle($event)" class="menu-sidebar" [ngClass]="{'open': isMenuActive}" ></menu>
+
+  <div class="canvas" [ngClass]="{'slide-left': isMenuActive}">
+    <div class="col-xs-12 pull-right">
+      <div class="row">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+
+

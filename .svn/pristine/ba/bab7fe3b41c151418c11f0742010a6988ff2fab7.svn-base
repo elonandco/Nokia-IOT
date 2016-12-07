@@ -1,0 +1,288 @@
+/**
+ * Created by jlmayorga on 3/14/16.
+ */
+import {Component, Input, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {FormNodeComponent} from './nodes/form-node.component';
+import {PromptNodeComponent} from './nodes/prompt-node.component';
+import {SelectorNodeComponent} from './nodes/selector-node.component';
+import {WaitNodeComponent} from './nodes/wait-node.component';
+import {MenuNodeComponent} from './nodes/menu-node.component';
+import {InfoNodeComponent} from './nodes/info-node.component';
+import {NgClass} from '@angular/common';
+import {QuestionNodeComponent} from './nodes/question-node.component';
+import {SSCWorkflowExecutionService} from '../../services/ssc-workflow-execution.service';
+import {WorkflowExecution} from './models/workflow-execution';
+import {MultiinputNodeComponent} from './nodes/multiinput-node.component';
+import {DataEventNodeComponent} from './nodes/data-event-node.component';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {SpinnerComponent} from '../spinner/spinner.component';
+import {WF_CTX_ACTION_UPDATE} from '../../reducers/workflow-context.reducer';
+import {
+  DSO_MODEL_ACTION_ADD_OR_UPDATE_ACCOUNT,
+  DSO_MODEL_ACTION_ADD_OR_UPDATE_DOMAIN,
+  DSO_MODEL_ACTION_ADD_OR_UPDATE_SERVICE,
+  DSO_MODEL_ACTION_ADD_OR_UPDATE_OPERATION
+} from '../../reducers/dso-model.reducer';
+import {AppConfigurationService} from '../../services/app-configuration.service';
+
+export enum WorkflowExecutionStatus{
+  STARTING = 0,
+  RUNNING = 1,
+  TERMINATED = 2,
+  ERROR = -2
+}
+
+@Component({
+  selector: 'workflow-component',
+  templateUrl: '/src/core/components/workflow/workflow.component.html',
+  directives: [NgClass,
+    MultiinputNodeComponent,
+    FormNodeComponent,
+    InfoNodeComponent,
+    MenuNodeComponent,
+    PromptNodeComponent,
+    SelectorNodeComponent,
+    WaitNodeComponent,
+    QuestionNodeComponent,
+    DataEventNodeComponent,
+    SpinnerComponent],
+})
+export class WorkflowComponent implements OnInit, OnDestroy {
+
+  @Input()
+  private workflowName:string;
+  @Input()
+  private workflowParameters:any;
+  @Input()
+  private headless:boolean = false;
+  @Output()
+  private isDone = new EventEmitter<boolean>();
+  private breadcrumbs:Array<{name:string, stepId:string}> = [];
+
+  private _executionStatus:WorkflowExecutionStatus;
+  private _executionStautsEnum = WorkflowExecutionStatus;
+  private _wfExec:WorkflowExecution;
+  private _breadcrumbIgnoredNodes = [];
+
+  constructor(private _wfExecService:SSCWorkflowExecutionService, private _cfgService:AppConfigurationService, private _store:Store<any>) {
+    this._store = _store;
+    this._executionStatus = WorkflowExecutionStatus.STARTING;
+  }
+
+  ngOnInit():any {
+    this._wfExec = new WorkflowExecution();
+    this._wfExec.name = this.workflowName;
+    this._wfExec.subscriberId = this._store._value.AuthenticationReducer.subscriberId;
+
+    if (this._store._value.WorkflowContextReducer.globalContext && 
+    		this._store._value.WorkflowContextReducer.globalContext.groupDataJSON){
+    	/*order is important, lets overwrite any value on the store from any new value on workflowParameters*/
+    	this.workflowParameters = Object.assign({}, this._store._value.WorkflowContextReducer.globalContext.groupDataJSON, 
+    									this.workflowParameters);
+    }
+    
+    this._wfExec.breadcrumbs = true;
+    this.listenForEvents();
+    this.startWorkflow(this.workflowParameters);
+    this._breadcrumbIgnoredNodes = this._cfgService.getBreadcrumbIgnoredNodes();
+  }
+
+  ngOnDestroy():any {
+    this._executionStatus = WorkflowExecutionStatus.TERMINATED;
+  }
+
+  /**
+   * Subscribes to any event returned by the workflow execution service and
+   * updates the status of this workflow if a matching event is found
+   */
+  private listenForEvents():void {
+    let wfExecutions:Observable<any> = this._store.select('WorkflowExecutionReducer');
+    wfExecutions.subscribe(
+      (wfExecs:Array < WorkflowExecution >) => {
+        if (wfExecs && wfExecs.length > 0) {
+          wfExecs.map((wfExec:WorkflowExecution)=> {
+            if (this._wfExec.id == wfExec.id) {
+              this._wfExec = wfExec;
+              this.processBreadCrumbs();
+              
+              if (!this._wfExec.step){
+            	  console.log("No Step information found on Workflow response");
+              }
+              
+              this._wfExec.step.content = this.parseJson(this._wfExec.step.content);
+
+              // Add the data passed by data event to the workflow context
+              if (this._wfExec.step.template === 'dataevent') {
+                let data = this._wfExec.step.content.data;
+
+                if (data && data.modelUpdateEventType) {
+                  this.processModelUpdateEvent(data);
+                } else {
+                  this._store.dispatch({type: WF_CTX_ACTION_UPDATE, payload: data});
+                }
+                this.handleSignal({signalName: 'next', payload: null});
+              }
+              if (this._wfExec.step.done) {
+                this._executionStatus = WorkflowExecutionStatus.TERMINATED;
+                this.isDone.emit(true);
+              }
+              this._executionStatus = WorkflowExecutionStatus.RUNNING;
+            }
+          });
+        }
+      },
+      (error)=> {
+        console.log("Error: " + error);
+      }
+    );
+  }
+
+  private processModelUpdateEvent(data) {
+    let modelUpdateEventType = data.modelUpdateEventType;
+    let modelUpdateEvent = data.modelUpdateEvent;
+    let actionType = null;
+    if (modelUpdateEventType && modelUpdateEvent) {
+      switch (modelUpdateEventType) {
+        case "account":
+          actionType = DSO_MODEL_ACTION_ADD_OR_UPDATE_ACCOUNT;
+          break;
+        case "domain":
+          actionType = DSO_MODEL_ACTION_ADD_OR_UPDATE_DOMAIN;
+          break;
+        case "service":
+          actionType = DSO_MODEL_ACTION_ADD_OR_UPDATE_SERVICE;
+          break;
+        case "operation":
+          actionType = DSO_MODEL_ACTION_ADD_OR_UPDATE_OPERATION;
+          break;
+        default:
+          console.log('Unsupported action type: ' + modelUpdateEventType);
+          return;
+      }
+      if (actionType) {
+        this._store.dispatch({type: actionType, payload: modelUpdateEvent});
+      }
+    }
+  }
+
+  /**
+   * Builds the breadcrumb array for each step, appending the current step to the end of the array.
+   */
+  private processBreadCrumbs():void {
+    if (this._wfExec.step) {
+      /*
+       if (this._wfExec.step.breadcrumbs) {
+       this.breadcrumbs = this._wfExec.step.breadcrumbs.map((breadcrumb)=> {
+       if (breadcrumb) {
+       return {name: breadcrumb.displayName, stepId: breadcrumb.id};
+       }
+       });
+       }
+       */
+      let lastBreadcrumb = this.breadcrumbs[this.breadcrumbs.length - 1];
+      if (this._breadcrumbIgnoredNodes.indexOf(this._wfExec.step.template) < 0) {
+        //is this the same last step
+        var notPrevBreadcrumb = (lastBreadcrumb) ? lastBreadcrumb.name !== this._wfExec.step.displayName : true;
+
+        if(notPrevBreadcrumb){
+          this.breadcrumbs.push({name: this._wfExec.step.displayName, stepId: this._wfExec.step.id});
+        }
+      }
+    }
+  }
+
+  /**
+   * Launches a new workflow passing the workflowParameters parameter as start parameters.
+   * @param workflowParameters
+   */
+  private startWorkflow(workflowParameters:Object):void {
+    this._wfExecService.startWorkflow(this._wfExec, workflowParameters).subscribe(
+      response => {
+        this._wfExec.id = response.workflow.id;
+      },
+      error => {
+        console.log("Error while starting workflow: " + error)
+      }
+    );
+  }
+
+  /**
+   * Handles clicks for breadcrumb element
+   * @param stepId
+   */
+  private gotoStep(stepId:string):void {
+
+    let index = this.breadcrumbs.findIndex((element, index, array) => {
+      return element.stepId === stepId;
+    });
+    
+    this.breadcrumbs.splice(index);
+
+    this.handleSignal({
+      signalName: 'goToStep', payload: {
+        targetStepID: stepId,
+        signalValue: "goToStep"
+      }
+    });
+  }
+
+  /**
+   * Sends a signal and its payload to the workflow engine.
+   * @param signal
+   */
+  public handleSignal(signal:{signalName:any, payload:Object}):void {
+    this._wfExecService.sendSignal(this._wfExec, signal.signalName, signal.payload).subscribe(
+      response => {
+        //TODO: This kind of request doesn't provide a response, handle status != 200
+        return;
+      }, error => {
+        //TODO: Handle errors
+      });
+  }
+
+  /**
+   * Cancel workflow execution
+   */
+  private cancelWorkflow() {
+    console.log("Cancelling workflow execution");
+    this._wfExecService.cancelWorkflow(this._wfExec).subscribe(
+      response => {
+        //TODO: This kind of request doesn't provide a response, handle status != 200
+        return;
+      }, error => {
+        //TODO: Handle errors
+      });
+  }
+
+  /**
+   * Suspend workflow execution
+   */
+  private suspendWorkflow() {
+    console.log("Suspending workflow execution");
+    this._wfExecService.suspendWorkflow(this._wfExec).subscribe(
+      response => {
+        //TODO: This kind of request doesn't provide a response, handle status != 200
+        return;
+      }, error => {
+        //TODO: Handle errors
+      });
+  }
+
+  /**
+   * Parses json data from the workflow response
+   * @param jsonString
+   * @returns {any}
+   */
+  private parseJson(jsonString):Object {
+    try {
+      let jsonObject = JSON.parse(jsonString);
+      if (jsonObject && jsonObject.data && typeof (jsonObject.data) === 'string') {
+        jsonObject.data = this.parseJson(jsonObject.data);
+      }
+      return jsonObject;
+    } catch (e) {
+      return jsonString;
+    }
+  }
+}

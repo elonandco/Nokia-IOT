@@ -1,0 +1,22 @@
+<div class="widget-scan">
+ <div *ngIf="status == 'FAIL'">
+ 	{{message}}
+ </div>
+  <div class="columns" *ngIf="status != 'FAIL'">
+    <span class="group-name">Manufacturer</span>
+    <span class="subgroups-name">Models</span>
+  </div>
+  <div class="groupitems">
+    <div *ngFor="let device of _devices; let i = index" class="groupitem">
+    <template [ngIf]="i<4">
+      <div class="groupname" >
+        <span class="ko-smart-phone icon-2x groupicon"></span>
+        <span class="grouptext">{{device.Manufacturer}}</span>
+      </div>
+      <span class="groupvalue">
+        {{device.Models}}
+      </span>
+      </template>
+    </div>
+  </div>
+</div>

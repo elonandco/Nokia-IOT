@@ -1,0 +1,5 @@
+<div class="users-widget-settings">
+
+  <toggle-button isOn="{{displayCount}}" (toggle)="displayCountToggle(link)"></toggle-button>
+  <span class="activity">Display Count</span>
+</div>

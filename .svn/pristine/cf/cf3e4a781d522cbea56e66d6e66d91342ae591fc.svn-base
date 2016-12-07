@@ -1,0 +1,4 @@
+<div class="step-content">
+  <spinner-component [header]="content?.header" [message]="content?.body"></spinner-component>
+</div>
+

@@ -1,0 +1,23 @@
+<div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+  <h2><span class="header-icons ko-x" (click)="onClose($event)"></span></h2>
+  <button *ngIf="addDeviceOperation" id="{{addDeviceOperation.id}}_id" [attr.operation]="addDeviceOperation.operationName"  class="btn btn-primary" (click)="onOperationClick($event)"><i class="ko-plus"></i>{{addDeviceOperation.name}}</button>
+  <workflow-component *ngIf="workflowActive" [workflowName]="workflowName" [headless]="false" 
+                    (isCanceled)="isCanceled($event)" (isDone)="isDone($event)"></workflow-component>
+                     
+ <div class="component-container" *ngIf="componentActive">
+    <h2 class="component-header" >
+      {{componentType}}
+
+      <span class="header-icons ko-x" (click)="onClose($event)"></span>
+      <span class="header-icons ko-restart" (click)="onRefresh($event)" *ngIf="refreshOperation"></span>
+    </h2>
+    <div class="campaign-container" *ngIf="campaignActive">
+      <div class="button-container">
+        <button id="{{operation.name}}_id" [attr.operation]="operation.operationName" class="btn btn-primary" *ngFor="let operation of workflowOperations" (click)="onOperationClick($event)">{{operation.name}}</button>
+      </div>
+
+      <data-table  [columns]="columnsArray" [columnData]="columnData" [operations]="workflowOperations" ></data-table>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,176 @@
+/* sorting icons */
+.sorting:before,
+.sorting:after,
+.sorting_asc:after,
+.sorting_desc:after {
+  content: "";
+  display: inline;
+  font-family: FontAwesome;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: normal;
+  text-rendering: auto;
+  margin-right: -12px;
+  float: right;
+  text-align: right;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sorting_asc:after {
+  color: #3AB8EF;
+  content: "\f0d8";
+
+}
+
+.sorting_desc:after {
+  color: #3AB8EF;
+  content: "\f0d7";
+
+}
+
+.sorting:after {
+  color: #CCC;
+  content: "\f0dc";
+  font-size: .825rem;
+}
+
+/* table header */
+.dataTables_wrapper .table > thead > tr > th {
+  padding-right: 20px;
+  white-space: nowrap;
+}
+
+.dataTables_wrapper > div:first-child {
+  padding: 0 15px;
+}
+
+.dataTables_wrapper > div:first-child label {
+  margin: 2px;
+}
+
+.dataTables_wrapper > div:first-child label input {
+  margin-left: 4px;
+}
+
+.dataTables_wrapper > div:first-child > div {
+  font-family: "Roboto-Light";
+  padding: 4px 8px;
+  background: #2459A9;
+  color: #FFF;
+  font-weight: normal;
+}
+
+.dataTables_wrapper > div:first-child label {
+  font-weight: 100;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+  background: #2459A9;
+  color: #FFF;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  text-align: right;
+}
+
+.dataTables_wrapper .bootstrap-select .btn {
+  height: 30px;
+}
+
+/* replace text with icons */
+.paginate_button a {
+  margin: 0 4px;
+}
+
+.pagination > li > a, .pagination > li > span {
+  font-size: 0.875rem;
+}
+
+.paginate_button.active a {
+  background: #3AB8EF !important;
+  border-color: #AAA;
+}
+
+.paginate_button.previous > a,
+.paginate_button.next > a,
+.paginate_button.first > a,
+.paginate_button.last > a {
+  color: transparent;
+  font-size: 0.02px;
+  height: 34px;
+  width: 34px;
+  border-radius: 2px !important;
+}
+
+.paginate_button.previous > a:after,
+.paginate_button.next > a:after,
+.paginate_button.first > a:after,
+.paginate_button.last > a:after,
+.paginate_button.first > a:before,
+.paginate_button.last > a:before {
+  content: "";
+  display: block;
+  float: right;
+}
+
+.paginate_button.previous > a:after,
+.paginate_button.first > a:after {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 6px 6px 0;
+  border-color: transparent #4889d8 transparent transparent;
+  margin-top: 4px;
+}
+
+.paginate_button.previous > a:after {
+  margin-right: 2px
+}
+
+.paginate_button.first > a:before {
+  border-color: transparent transparent transparent #4889d8;
+  border-style: solid;
+  border-width: 0 0 0 2px;
+  height: 12px;
+  margin-left: -10px;
+  margin-right: 8px;
+  margin-top: 4px;
+  width: 1px;
+}
+
+.paginate_button.next > a:after,
+.paginate_button.last > a:before {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent #4889d8;
+  margin-top: 4px;
+}
+
+.paginate_button.last > a:before {
+  margin-left: -6px;
+  margin-right: 2px;
+}
+
+.paginate_button.last > a:after {
+  border-color: transparent transparent transparent #4889d8;
+  border-style: solid;
+  border-width: 0 0 0 2px;
+  height: 12px;
+  margin-right: -4px;
+  margin-top: 4px;
+  width: 1px;
+
+}
+
+ul.pagination,
+.dataTables_info {
+  margin-top: 8px;
+}
+
+.dataTables_wrapper > .row {
+  overflow: auto;
+}

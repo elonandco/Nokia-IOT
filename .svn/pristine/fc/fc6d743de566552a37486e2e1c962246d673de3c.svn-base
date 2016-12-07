@@ -1,0 +1,343 @@
+import {Component,OnInit,OnDestroy,ReflectiveInjector} from "@angular/core";
+import {Router, RouteData} from "@angular/router-deprecated";
+import {Store} from '@ngrx/store';
+import {DataTable} from 'primeng/primeng';
+import {Column} from 'primeng/primeng';
+import {CampaignService} from '../../../../custom/components/dashboard/campaigns/campaign-widget-service';
+import {DynamicRouteConfiguratorService} from "../../../../core/services/dynamic-route-configurator.service";
+import {WorkflowComponent} from '../../../../core/components/workflow/workflow.component';
+import {WorkflowExecution} from '../../../../core/components/workflow/models/workflow-execution';
+import {WorkflowLauncherService} from '../../../../core/components/workflow/workflow-launcher.service';
+import {SSCWorkflowExecutionService} from '../../../../core/services/ssc-workflow-execution.service';
+import {provideStore, usePreMiddleware, usePostMiddleware, Middleware} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {DASHBOARD_SHOW} from '../../../../core/reducers/dashboard.reducer';
+import {TooltipDirective} from "../../../../core/components/tooltip/tooltip.directive";
+import {SpinnerComponent} from '../../../../core/components/spinner/spinner.component';
+import {CHART_DIRECTIVES, Highcharts} from 'angular2-highcharts';
+import Highcharts3d from 'highcharts/highcharts-3d';
+
+Highcharts3d(Highcharts);
+
+@Component({
+  selector: 'campaign-detail',
+  templateUrl: '/src/custom/components/dashboard/campaigns/campaign-detail.component.html',
+  directives: [DataTable, Column,WorkflowComponent,TooltipDirective,CHART_DIRECTIVES,SpinnerComponent],
+  providers: [CampaignService,WorkflowLauncherService]
+})
+  
+export class CampaignDetailComponent implements OnInit, OnDestroy{
+  title:string = 'Campaign Details';
+  _allCampaigns: Object[] = [];
+  private paginationDetails:String = ""
+  dsoObs:Observable<any>;
+
+  workflowConvetextObs:Observable<any>;
+
+  componentType:string = "";
+  dsoObsubscription: any;
+  private type:string;
+  workflowName:string;
+  toN:number = 0;
+  rowsXPage:number=10;
+  
+  workflowOperations:Array<any> = [];
+  refreshOperation:Object;
+
+  workflowActive:boolean = false;
+  campaignActive:boolean = false;
+  componentActive:boolean = false;
+  workflowHidden:boolean = false;
+  
+  stopCampaingFlow = "EAP_IOT_STOP_CAMPAIGN";
+  stopCampaingWfExecTracker: { [index: string]: string; } = {};
+  stopCampaingWfResult: { [index: string]: string; } = {};
+  
+  reportCampaingFlow = "EAP_IOT_VIEW_CAMPAIGN_REPORTS";
+  reportCampaingWfExecTracker: { [index: string]: string; } = {};
+  reportCampaingWfShow: { [index: string]: string; } = {};
+  options:Object;
+  
+  constructor(private _router:Router, public _campaignService: CampaignService, private _store:Store<any>, data:RouteData,private _drc:DynamicRouteConfiguratorService,
+		  	 private _wfExecService:SSCWorkflowExecutionService,
+		  	private _wfeLaunchService:WorkflowLauncherService) {
+    /**
+     * There is not need to get this value from routedata because we are not using a base component, we should have a 
+     * base/abstract component and the we could use it, for now let define rigth here 
+     * this.type = data.get('type');
+     */
+	this.type = "Campaigns"; 
+    this.dsoObs = _store.select('DSOModelReducer');
+    
+    
+    this.workflowConvetextObs = _store.select('WorkflowContextReducer');
+    this.dsoObsubscription = this.dsoObs.subscribe((data:any)=> {
+      let services = _.find(data.domains.domain, function (domain:any) {
+        return domain.id === "Widgets"
+      }).services.service;
+      let Campaigns = _.find(services, function (service:any) {
+        return service.id === "Campaigns"
+      });
+
+      if (Campaigns != undefined && Campaigns.operations != undefined){
+        var operations = _.cloneDeep(Campaigns.operations.operation);
+        this.refreshOperation = _.remove(operations,function(operation){
+          return operation.attributes.hasOwnProperty('type') && operation.attributes.type === "refresh_details"
+        })[0];
+        _.remove(operations,function(operation){
+            return operation.attributes.hasOwnProperty('type') && operation.attributes.type === "refresh_widget"
+        })[0];
+        this.workflowOperations = operations;
+      } else {
+        console.log("Widget::Campaigns Doesn't contained expected operations")
+      }
+    },
+    error => {
+
+    })
+    		
+	this.options={
+	 chart: {
+        type: 'pie',
+        width:220,
+    	height:220
+    },
+    title: {
+        text: ''
+    },
+    subtitle: {
+        text: ''
+    },
+    yAxis: {
+        title: {
+            text: ''
+        }
+    },
+    plotOptions: {
+        pie: {
+            shadow: false,
+            center: ['50%', '60%']
+        }
+    },
+    tooltip: {
+        valueSuffix: ''
+    },
+
+        series: [{
+        name: 'Report',
+        data: [],
+        size: '80%',
+        innerSize: '25%',
+        showInLegend:true,
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+                return this.y > 0 ? this.point.y : null;
+            },
+            color: '#ffffff',
+            distance: -12
+          
+        }
+    },{
+    
+        name: 'Total',
+        data: [], 
+        size: '40%',
+        dataLabels: {
+            formatter: function () {
+                return this.y > 0 ? this.point.y : null;
+            },
+            color: '#ffffff',
+            distance: -30
+        }
+    }
+    ],
+            credits: {
+              enabled: false
+            },
+        };
+  }
+
+  ngOnInit() {
+    this.workflowName = _.find(this.workflowOperations, function (operation) {
+      return operation.attributes.hasOwnProperty('type') && operation.attributes.type === "details";
+    }).operationName;
+    this.workflowActive = true;
+    
+    //$('[data-toggle="popover"]').popover();
+    
+  }
+
+  isDone(evt) {
+    this.workflowHidden = true;
+    /*switch (this.type) {
+      case 'Campaign':
+      {*/
+        this.workflowActive = false;
+        this.campaignActive = true;
+        this.componentActive = true;
+        this.componentType = 'Campaigns';
+        this.initDetails();
+        /*break;
+      }
+    }*/
+  }
+  initDetails(){
+	  
+	this.stopCampaingWfExecTracker= {};
+	this.stopCampaingWfResult = {};
+	  
+	this.reportCampaingWfExecTracker = {};
+	this.reportCampaingWfShow = {};
+	  
+    let _tempGroups = this._campaignService.getCampaignList();
+    this._allCampaigns = _.orderBy(_tempGroups, ["Create Date"], ["desc"])
+    this.status = this._campaignService.listStatus;
+    this.message = this._campaignService.listMessage;
+
+    if(this._allCampaigns && this.status !== 'FAIL'){
+      let numofCampaigns = this._allCampaigns.length;
+
+      if(numofCampaigns > 0){
+        this.toN = numofCampaigns > 10 ? 10 : numofCampaigns;
+        this.paginationDetails = "Showing 1 to " + this.toN + " of " + numofCampaigns;
+      } else {
+        this.paginationDetails = "No record found";
+      }
+
+    }
+  }
+  
+  onOperationClick(evt:Event) {
+    this.hideComponent();
+    this.runWorkflow(evt.target.getAttribute('operation'))
+  }
+  
+  hideComponent(){
+	
+	this.campaignActive = false;
+    this.componentActive = false;
+    
+    /*switch (this.type) {
+      case 'Campaigns':
+        {
+          this.campaignActive = false;
+          this.componentActive = false;
+          break;
+        }
+  	}*/
+  }
+  
+  runWorkflow(operation:string){
+  this.workflowName = operation;
+    this.workflowHidden = false;
+    this.workflowActive = true;
+  }
+
+  onClose(evt:Event) {
+    
+    this._store.dispatch({type: DASHBOARD_SHOW});
+    
+    let link = ['Dashboard'];
+    this._router.navigate(link);
+  }
+
+  launchAddCampaign() {
+    console.log('launching add campaign flow');
+    this._router.navigate(['EAP_IOT_ADD_CAMPAIGN']);
+  }
+  
+  stopJob(bulkJobId){
+	  if (this.stopCampaingWfExecTracker[bulkJobId] == "STOPPING") {
+		   return;
+	   }
+	  
+	  let workflowParameters = JSON.parse('{ "bulkJobId" : "'  + bulkJobId + '" }');
+	  this.startStopWF(bulkJobId, workflowParameters);
+  }
+  
+  loadReportJob(bulkJobId){
+	  
+	  if (!this.reportCampaingWfShow[bulkJobId]){
+		  this.reportCampaingWfShow[bulkJobId] = true;
+	  }else{
+		  this.reportCampaingWfShow[bulkJobId] = false;
+		  return;
+	  }
+	  
+	  if (this.reportCampaingWfExecTracker[bulkJobId] == "LOADING") {
+		   return;
+	   }
+	  
+	  let workflowParameters = JSON.parse('{ "bulkJobId" : "'  + bulkJobId+ '" }');
+	  this.startReportWF(bulkJobId,workflowParameters);
+	  
+  }
+  
+  
+  private startReportWF(bulkJobId, workflowParameters: Object){
+	  this._wfeLaunchService = new WorkflowLauncherService(this._wfExecService,this._store);
+	   this._wfeLaunchService.isDone.subscribe((data:any)=> {
+		   if (data){
+			   let response = this._store.value.WorkflowContextReducer.globalContext["campaignReportStatusJSON_" +data.bulkJobId];
+			   
+			   this.options.series[0].data = JSON.parse(
+					   				'[{"name":"Submitetd", "y":' + response.submittedCampaignCount + ',"color":"#1F77B4"},'+ 
+					   				 '{"name":"Failed", "y": ' + response.failedCampaignCount + ',"color":"#DB0000"},' + 
+					   				 '{"name":"Success","y": ' + response.successCampaignCount + ',"color":"#2CA02C"}]');
+			   this.options.series[1].data = JSON.parse('[{"name":"Total", "y":' + response.totalCampaignCount + ', "color":"white"}]');
+			   
+		   //{"name":"Admin", "y":35},{"name":"Super Admin", "y":20},{"name":"Customer","y":55},{"name":"Viewonly", "y":89}
+					   
+					   //response.totalCampaignCount;
+			   //this.options.series[0].data = {[{"failedCampaignCount":"0","successCampaignCount":"4","submittedCampaignCount":"0","totalCampaignCount":"4"}]}
+			   
+			   this.reportCampaingWfExecTracker[bulkJobId] = "DONE";
+		   } 
+	    });
+	    
+	   this._wfeLaunchService.launchWorkflow(this.reportCampaingFlow,workflowParameters);
+	   this.reportCampaingWfExecTracker[bulkJobId] = "LOADING";
+	  
+  }
+  
+   private startStopWF(bulkJobId, workflowParameters:Object):void {
+	   this._wfeLaunchService = new WorkflowLauncherService(this._wfExecService,this._store);
+	   this._wfeLaunchService.isDone.subscribe((data:any)=> {
+		   if (data && data.bulkJobId){
+			  let stopResult = this._store.value.WorkflowContextReducer.globalContext["stopCampaignJSON_" +data.bulkJobId];
+			  if (stopResult){
+				    this.stopCampaingWfExecTracker[bulkJobId] = stopResult.resultStatus;
+				    this.stopCampaingWfResult[bulkJobId] = stopResult.resultMessage;
+			  } 
+		   } 
+	    });
+	    
+	   this._wfeLaunchService.launchWorkflow(this.stopCampaingFlow,workflowParameters);
+	   this.stopCampaingWfExecTracker[bulkJobId] = "STOPPING";
+  }
+
+  onRefresh(evt:Event){
+    this.hideComponent();
+    this.runWorkflow(this.refreshOperation.operationName);
+  }
+
+  ngOnDestroy(){
+    console.log("Destroying campaign-details.component::: unsubscribe");
+    this.dsoObsubscription.unsubscribe();
+  }
+
+  handlePageSelect(event){
+	this.rowsXPage = event.rows;
+    this.toN = event.first + this.rowsXPage;
+    if (this.toN > this._allCampaigns.length){
+      this.toN = this._allCampaigns.length;
+    }
+    this.paginationDetails = "Showing " + (event.first + 1) + " to " + this.toN + " of " + this._allCampaigns.length
+  }
+  
+  onFilter(event){
+
+  }
+
+}

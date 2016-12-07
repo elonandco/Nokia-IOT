@@ -1,0 +1,16 @@
+<div>
+  <form (ngSubmit)="onSubmit()" (change)="formChangeEvent($event)" [ngFormModel]="form" class="form-horizontal">
+    <fieldset>
+      <df-element *ngFor="let formElement of formElements" [formElement]="formElement" [form]="form"></df-element>
+      <div class="col-md-8 form-group form-buttons">
+        <div class="pull-right">
+          <button type="reset" class="btn btn-reset" (click)="handleReset()">
+          <i class="ko-x"></i>Reset</button>
+          <button type="submit" class="btn btn-default btn-primary" [disabled]="!form.valid">
+          <i class="fa fa-angle-double-right"></i>Next</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+

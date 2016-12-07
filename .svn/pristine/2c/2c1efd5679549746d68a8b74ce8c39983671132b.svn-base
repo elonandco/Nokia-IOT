@@ -1,0 +1,14 @@
+<div class="firmware-widget-settings">
+  <span class="include">Sort by Date</span>
+  <ul>
+    <li>
+      <label class="radio-inline">
+        <input type='radio' #DateAsc (change)='sortInfo = DateAsc.value' name='firmwareDateRadioGroup' [checked]='sortInfo.field === "firmwareTimestamp" && sortInfo.order === "asc"' value='{"field":"firmwareTimestamp","order":"asc"}'> Recent on Top
+      </label>
+      <label class="radio-inline">
+        <input type='radio' #DateDesc (change)='sortInfo = DateDesc.value' name='firmwareDateRadioGroup' [checked]='sortInfo.field === "firmwareTimestamp"  && sortInfo.order === "desc"' value='{"field":"firmwareTimestamp","order":"desc"}'> Oldest on Top
+      </label>
+
+    </li>
+  </ul>
+</div>

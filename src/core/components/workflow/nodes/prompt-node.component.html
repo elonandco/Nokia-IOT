@@ -1,0 +1,58 @@
+<div class="step-content">
+
+  <div>
+    <h3>{{data?.header}}</h3>
+  </div>
+  <div>
+    <h3>{{data?.body}}</h3>
+  </div>
+
+  <form [ngFormModel]="form" (ngSubmit)="onSubmit(form.value)">
+    <label><span>{{content?.prompt}}</span></label>
+
+    <input *ngIf="content?.multiline == false" [ngFormControl]="form.controls['promptInput']" type="text">
+        <textarea *ngIf="content?.multiline == true" [ngFormControl]="form.controls['promptInput']" name="Text1"
+                  cols="40" rows="5"></textarea>
+
+    <div *ngIf="promptInput.hasError('required')"
+         class="error">Prompt Input is invalid
+    </div>
+
+    <div *ngIf="promptInput.hasError('invalidPromptInput')"
+         class="error">Does not match input
+    </div>
+
+    <div>
+      <h3>{{data?.footer}}</h3>
+    </div>
+
+  </form>
+  <!-- Button Bar Div -->
+  <div class="pull-right step-actions">
+    <button *ngIf="workflowStep?.isDone" (click)="startWorkflow()" class="btn btn-default">
+            <span *ngIf="content.data.signalLabels && content.data.signalLabels['restart']"> {{content.data.signalLabels['restart']}}</span>
+            <span *ngIf="!(content.data.signalLabels && content.data.signalLabels['restart'])">Restart</span>
+    </button>
+    <button *ngIf="!content?.isCancelButtonHidden && !workflowStep?.isDone" (click)="cancelWorkflow()"
+            class="btn btn-default">
+            <span *ngIf="content.data.signalLabels && content.data.signalLabels['cancel']"> {{content.data.signalLabels['cancel']}}</span>
+            <span *ngIf="!(content.data.signalLabels && content.data.signalLabels['cancel'])">Cancel</span>
+    </button>
+    <button *ngIf="!content?.isSuspendButtonHidden && !workflowStep?.isDone" (click)="suspendWorkflow()"
+            class="btn btn-default">
+            <span *ngIf="content.data.signalLabels && content.data.signalLabels['suspend']"> {{content.data.signalLabels['suspend']}}</span>
+            <span *ngIf="!(content.data.signalLabels && content.data.signalLabels['suspend'])">Suspend</span>
+    </button>
+    <button *ngIf="!workflowStep?.isDone && workflowStep?.prevStepId" (click)="sendSignal('back')"
+            class="btn btn-default">
+            <span *ngIf="content.data.signalLabels && content.data.signalLabels['back']"> {{content.data.signalLabels['back']}}</span>
+            <span *ngIf="!(content.data.signalLabels && content.data.signalLabels['back'])">Back</span>
+    </button>
+    <button *ngFor="let signal of workflowStep?.validSignals" (click)="sendSignal(signal.name)"
+            class="btn"
+            [ngClass]="{'btn-primary' : signal.name=='next', 'btn-default':signal.name !='next'}">
+            <span *ngIf="content.data.signalLabels && content.data.signalLabels[signal.name]"> {{content.data.signalLabels[signal.name]}}</span>
+            <span *ngIf="!(content.data.signalLabels && content.data.signalLabels[signal.name])">Next</span>
+    </button>
+  </div>
+</div>

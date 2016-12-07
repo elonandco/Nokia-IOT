@@ -1,0 +1,100 @@
+/**
+ * Created by jlmayorga on 3/22/16.
+ */
+
+import {Component, Output, EventEmitter, OnInit} from '@angular/core';
+import {WorkflowComponent} from '../workflow/workflow.component';
+import {AppConfigurationService} from '../../services/app-configuration.service';
+import {Store} from '@ngrx/store';
+import {INIT_WF_COMPLETED, INIT_WF_STARTING} from '../../reducers/init-workflow.reducer';
+import {SSCWorkflowExecutionService} from '../../services/ssc-workflow-execution.service';
+import {Observable} from 'rxjs/Rx';
+import {AuthenticationService} from '../../services/authentication.service';
+import {Router} from '@angular/router-deprecated';
+
+@Component({
+  selector: 'app-init-component',
+  templateUrl: '/src/core/components/init/init.component.html',
+  directives: [WorkflowComponent],
+  styles: [`
+    .init-panel{
+      margin:0px;
+      padding:0px;
+    }
+  `]
+})
+export class InitComponent implements OnInit {
+  protected initWorkflowName:string;
+  private initDone:boolean = false;
+  private loginObs: Observable<any>;
+  protected workflowParameters: Object;
+  private status:string;
+  private message:string;
+  
+  @Output()
+  initCompEmiter = new EventEmitter<boolean>();
+
+  constructor(private _configService:AppConfigurationService, _wfExecSvc:SSCWorkflowExecutionService, private _store:Store<any>,
+              private _authService:AuthenticationService, public _router:Router) {
+    this.initWorkflowName = _configService.getInitWorkflow();
+    this._store.dispatch({type: INIT_WF_STARTING, payload: {status: 'starting'}});
+    
+    this.groupInfo = this._store.value.GroupContextReducer;
+    
+	 //TODO: we need to get the groupInfo from DashboardReducer and identify 
+    //which fire the action to select the correct on, sprint 7
+    //this.beginFlowMode = this._store.value.DashboardReducer;
+    
+    /*TODO: improve where action is firing this workflow
+     * 1) can be from login
+     * 2) can be from dashboard master refresh
+     * 3) can be from dashboard groupTree refresh
+     */
+    if (this.groupInfo != undefined && this.groupInfo != "" ){
+    	this.workflowParameters = this.groupInfo;
+    } else{
+    	this.workflowParameters = this._store.value.AuthenticationReducer.attributes;
+    }
+    
+  }
+
+  ngOnInit():any {
+
+    this.initDone = true;
+    return undefined;
+  }
+
+  isDone(done:boolean) {
+    
+    //TODO: get status from store
+    this.status = this._store.value.WorkflowContextReducer.globalContext["groupTreeStatus"];
+    this.message = this._store.value.WorkflowContextReducer.globalContext["groupTreeMessage"];
+    
+    if (this.status && (this.status == "FAIL" || this.status == "RESTART_NEEDED")){
+    	this.onLogout();
+    }
+    
+    //required for init workflow
+    this.initCompEmiter.emit(true);
+    this._store.dispatch({type: INIT_WF_COMPLETED, payload: {status: 'completed'}});
+    
+  }
+  
+  onLogout() {
+	    this._authService.logout()
+	      .subscribe(
+	        () => {
+	          this._router.navigate(['Login']);
+	          //window.location.replace('/login')
+	        }
+	      );
+	  }
+  
+  onClose(event){
+	  this.onLogout();
+  }
+  
+  isCanceled(){
+	  this.onLogout();
+  }
+}

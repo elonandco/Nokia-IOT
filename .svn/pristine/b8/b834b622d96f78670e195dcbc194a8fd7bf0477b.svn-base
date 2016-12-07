@@ -1,0 +1,28 @@
+.ko-campaigns:before {
+  content: "\e901";
+}
+.highcharts-background {
+  fill: none;
+ }
+ .highcharts-yaxis-title {
+ 		fill: #000;
+ 		color: #000;
+ }
+ .highcharts-legend-item {
+ 		display: none;
+ }
+ .highcharts-container text {
+		font-family: "Roboto-Light";
+ }
+.campaign-widget-settings{
+  li{
+    list-style: none;
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    display: inline-block;
+    width: 100%;
+  }
+
+
+}
+

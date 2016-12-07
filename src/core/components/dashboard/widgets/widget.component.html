@@ -1,0 +1,47 @@
+<div [attr.type]="type" class="widget" [class.show-settings]="displaySettings === true" (mouseenter)="onMouseEnter()"
+    (mouseleave)="onMouseLeave()" [ngClass]="{'active': isActive || isSelected,'hide':isHidden }" (click)="onClick()">
+  <div class="content" [ngClass]="{'refresh':refreshing}">
+
+    <div *ngIf="refreshing">
+      <div class="lg spinner light"></div>
+      <workflow-component *ngIf="workflowActive" [workflowName]="workflowName" [headless]="true" class="hidden" (isDone)="isDone($event)"></workflow-component>
+    </div>
+
+    <div class="front-side flip">
+      <div class="toolbar">
+        <div (click)="showDetail()">
+          <h2 class="widget-title">{{title}}
+            <span class="ko-chevron-right" style="cursor: pointer;" ></span>
+          </h2>
+        </div>
+        <div class="widget-buttons">
+          <div class="widget-settings">
+            <span class="widget-button ko-refresh-circle" (click)="onRefresh()" title="refresh"></span>
+            <span class="widget-button ko-gear" (click)="showSettings()" title="settings"></span>
+            <span class="widget-button ko-x" (click)="close()" title="close"></span>
+          </div>
+        </div>
+      </div>
+      <div class="widget-system" *ngIf="!refreshing">
+        <widget-content [data]="componentData"></widget-content>
+      </div>
+    </div>
+    <div class="back-side flip">
+      <div class="toolbar">
+        <h2 class="widget-title">{{title}} Settings</h2>
+        <div class="widget-buttons">
+          <div class="flip-back">
+            <span class="ko-refresh" style="cursor: pointer;" (click)="hideSettings()"></span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <widget-settings></widget-settings>
+      </div>
+      <div class="btn-bar">
+        <input type="button" class="btn btn-default" value="Cancel" (click)="cancelSettings()">
+        <input type="button" class="btn btn-primary" value="Save" (click)="saveSettings()">
+      </div>
+    </div>
+  </div>
+</div>

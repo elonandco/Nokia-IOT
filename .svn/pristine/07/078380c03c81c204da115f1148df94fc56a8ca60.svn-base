@@ -1,0 +1,33 @@
+import {Injectable} from '@angular/core'
+import {Observable} from 'rxjs/rx'
+import {Http} from '@angular/http'
+import 'rxjs/add/operator/map'
+import {Store} from '@ngrx/store'
+
+@Injectable()
+export class FirmwareService {
+
+    constructor(private _http:Http,private _store:Store<any>) {
+    	this._store = _store;
+    }
+
+    public status:string = "";
+    public message:string = "";
+
+	public listStatus:string = "";
+	public listMessage:string = "";
+    
+    getfirmware() {
+       	let firmwares = this._store.value.WorkflowContextReducer.globalContext["firmwareJSON"];
+        this.status = this._store.value.WorkflowContextReducer.globalContext["firmwareStatus"];
+    	this.message = this._store.value.WorkflowContextReducer.globalContext["firmwareMessage"];
+    	return firmwares;
+    }
+
+    getfirmwareList() {
+       	let firmwares = this._store.value.WorkflowContextReducer.globalContext["firmwareListJSON"];
+        this.listStatus = this._store.value.WorkflowContextReducer.globalContext["firmwareListStatus"];
+    	this.listMessage = this._store.value.WorkflowContextReducer.globalContext["firmwareListMessage"];
+    	return firmwares;
+    }
+}

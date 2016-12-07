@@ -1,0 +1,154 @@
+/**
+ * Created by jlmayorga on 3/18/16.
+ */
+import {Component, OnChanges, SimpleChange} from '@angular/core';
+import {AbstractNode} from './abstract-node';
+import {DynamicFormComponent} from '../../dynamic-form/dynamic-form.component';
+import {TreeContainerComponent} from '../../tree/tree-container.component';
+
+@Component({
+  selector: 'workflow-form-node',
+  templateUrl: '/src/core/components/workflow/nodes/form-node.component.html',
+  directives: [DynamicFormComponent, TreeContainerComponent]
+})
+export class FormNodeComponent extends AbstractNode implements OnChanges {
+  private nodeData;
+  private implementationType:string;
+  private formName:string;
+  private enableButtons:boolean = false;
+  private enableNext:boolean = false;
+  private formValues:any;
+
+  ngOnChanges(changes:{[key:string]:SimpleChange}):any {
+    super.ngOnChanges(changes)
+    this.enableButtons = false;
+    this.formValues = undefined;
+    if (this.content && this.content.data) {
+      this.implementationType = this.content.data.type;
+      if (this.implementationType === 'tree'){
+		  this.enableButtons=true;
+	  }
+      this.formName = this.content.formName;
+      this.nodeData = this.data.data;
+
+      if (_.map(this.nodeData, 'key').indexOf('timeZoneID') > -1) {
+        this.nodeData[_.map(this.nodeData, 'key').indexOf('timeZoneID')].options = this.getTimeZoneList();
+      }
+      if (_.map(this.nodeData, 'key').indexOf('policyDateTimeID') > -1) {
+        var options = this.nodeData[_.map(this.nodeData, 'key').indexOf('policyDateTimeID')].options;
+        if(options){
+          for(var i = 0;i<options.length;i++){
+            options[i].value = this.getDuration(options[i].key);
+          }
+        }
+      }
+      if (_.map(this.nodeData, 'key').indexOf('timezone') > -1) {
+        let timezoneObj = this.nodeData[_.map(this.nodeData, 'key').indexOf('timezone')];
+        let timezones = this.getTimeZoneList();
+        timezoneObj.value = timezones[_.map(timezones, 'key').indexOf(timezoneObj.value)].value || ""
+      }
+      if (this.implementationType !== 'form' && this.implementationType !== 'tree') {
+        this.implementationType = 'not_supported';
+      }
+    } else {
+      this.implementationType = 'error';
+    }
+
+
+  }
+
+  handleSubmit(formValues:any) {
+	  this.formValues = formValues;
+	  if (this.implementationType === 'tree'){
+		  this.enableNext=true;
+	  }
+	  else{
+	    this.sendSignal('next');
+	  }
+
+  }
+  
+  handleBack() {
+	  this.sendSignal('back');
+  }
+
+  getDuration(time){
+    if(time){
+      var times = time.split(","),
+      dayofWeek = ["Sun","Mon","Tue","Wed","Thurs","Fri","Sat"]
+      amorpm = function(time){
+        return (time.indexOf("PM") > -1) ? "PM" : "AM";
+      };
+      for(var i = 0;i < times.length;i++){
+        var timeanddate = times[i].split('#'),
+        duration = timeanddate[0].split('-'),
+        date = new Date(timeanddate[1]),
+        startTime = duration[0],
+        endTime = duration[1];
+        finalTime = startTime.split(":")[0] + amorpm(startTime) + " - " + endTime.split(":")[0] + amorpm(endTime) + ' ' + dayofWeek[date.getDay()];
+      }
+      return finalTime;
+    }
+  }
+
+  sendSignal(signalName:string) {
+	  let payload = {};
+	  if (this.implementationType === 'tree'){
+		  payload[this.formName] = this.formValues.id;
+		  payload["fullName"] = this.formValues.fullName;
+		  payload["enterprise"] = this.formValues.enterprise;
+	  } else {
+		  payload[this.formName] = this.formValues;
+	  }
+	  super.sendSignal('next', payload);
+  }
+
+  getTimeZoneList() {
+    var TimeZoneList = [
+      {"key":"-0800", "value":"-08:00 Pacific Time (US & Canada); Yukon; Tijuana"},
+      {"key":"-0700", "value":"-07:00 Mountain Time (US & Canada)"},
+      {"key":"-0600", "value":"-06:00 Central Time (US & Canada); Mexico City, Tegucigalpa"},
+      {"key":"-0500", "value":"-05:00 Eastern Time (US & Canada); Bogota; Lima; Quito"},
+      {"key":"-0430", "value":"-04:30 Caracas"},
+      {"key":"-0400", "value":"-04:00 Atlantic Time (Canada); Caracas, La Paz; Santiago"},
+      {"key":"-0345", "value":"-03:45 Guyana, South America"},
+      {"key":"-0330", "value":"-03:30 Newfoundland; Suriname, South America"},
+      {"key":"-0300", "value":"-03:00 Greenland; Brasilia; Buenos Aires; Puerto Rico"},
+      {"key":"-0200", "value":"-02:00 Mid-Atlantic"},
+      {"key":"-0100", "value":"-01:00 Azores, Cape Verde Is."},
+      {"key":"0000", "value":"00:00 Greenwich Mean Time"},
+      {"key":"0100", "value":"01:00 Amsterdam; Berlin; Bern; Rome; Stockholm; Vienna"},
+      {"key":"0200", "value":"02:00 Athens; Istanbul; Minsk; Jerusalem"},
+      {"key":"0300", "value":"03:00 Baghdad; Kuwait; Moscow"},
+      {"key":"0330", "value":"03:30 Tehran, Iran"},
+      {"key":"0400", "value":"04:00 Abu Dhabi; Muscat"},
+      {"key":"0430", "value":"04:30 Kabul, Afghanistan"},
+      {"key":"0500", "value":"05:00 Ekaterinburg"},
+      {"key":"0530", "value":"05:30 India; Bombay; Calcutta; New Delhi; Sri Lanka"},
+      {"key":"0545", "value":"05:45 Kathmandu, Nepal"},
+      {"key":"0600", "value":"06:00 Astana; Dhaka"},
+      {"key":"0630", "value":"06:30 Cocos Islands; Yangon; Myanmar"},
+      {"key":"0700", "value":"07:00 Bangkok; Hanoi"},
+      {"key":"0800", "value":"08:00 Perth; Singapore; China"},
+      {"key":"0845", "value":"08:45 South Australia"},
+      {"key":"0900", "value":"09:00 Osaka; Tokyo; Seoul"},
+      {"key":"0930", "value":"09:30 Northern Australia"},
+      {"key":"1000", "value":"10:00 Brisbane; Canberra; Sydney; Guam"},
+      {"key":"1100", "value":"11:00 Magadan; Solomon Is.; New Caledonia"},
+      {"key":"1130", "value":"11:30 New Zealand; Norfold Island, Australia"},
+      {"key":"1200", "value":"12:00 Auckland; Wellington; Fiji; Marshall Is.; Tuvalu"},
+      {"key":"1245", "value":"12:45 Chatham Island, New Zealand"},
+      {"key":"1300", "value":"13:00 Nukulalofa; Phoenix Islands"},
+      {"key":"1400", "value":"14:00 Line Islands; Christmas Islands"},
+      {"key":"-1200", "value":"-12:00 Eniwelok, Kwajalein"},
+      {"key":"-1100", "value":"-11:00 Midway Island, Samoa"},
+      {"key":"-1030", "value":"-10:30 Cook Islands"},
+      {"key":"-1000", "value":"-10:00 Hawaii; Western Aleutian Islands"},
+      {"key":"-0930", "value":"-09:30 Marquesas Islands"},
+      {"key":"-0900", "value":"-09:00 Alaska; Eastern Aleutian Islands"},
+      {"key":"-0830", "value":"-08:30 Pitcairn Island"}
+    ];
+    return TimeZoneList;
+  }
+
+}

@@ -1,0 +1,37 @@
+<div class="step-content">
+
+  <div>
+    <h3>{{data?.header}}</h3>
+  </div>
+  <div>
+    <h3>{{data?.body}}</h3>
+  </div>
+  <div>
+    <h3>{{data?.footer}}</h3>
+  </div>
+
+  <div>
+    <button *ngFor="let signal of workflowStep?.validSignals" (click)="sendSignal(signal.name)"
+            class="btn"
+            [ngClass]="{'btn-primary' : signal.name=='next', 'btn-default':signal.name !='next'}">
+      {{signal.displayName}}
+    </button>
+  </div>
+
+  <div class="pull-right step-actions">
+    <button *ngIf="workflowStep?.isDone" (click)="startWorkflow()" class="btn btn-default">
+      Restart Workflow
+    </button>
+    <button *ngIf="!content?.isCancelButonHidden && !workflowStep?.isDone" (click)="cancelWorkflow()"
+            class="btn btn-default">Cancel
+    </button>
+    <button *ngIf="!content?.isSuspendButtonHidden && !workflowStep?.isDone" (click)="suspendWorkflow()"
+            class="btn btn-default">
+      Suspend
+    </button>
+    <button *ngIf="!workflowStep?.isDone && workflowStep?.prevStepId" (click)="sendSignal('back')"
+            class="btn btn-default">Back
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,7 @@
+<div *ngIf="show" class="sidebar-groups">
+  <div class="groups-update">Groups
+    <button type="button" (click)="handleRefreshClick()"><i class="ko-refresh-circle"></i><span class="text">refresh</span></button>
+    <button type="button" (click)="groupTree.expandAll()" style="float: right"><i class="ko-plus"></i><span class="text">Expand All</span></button>
+  </div>
+  <tree-container #groupTree [treeJson]="treeData" (handleClick)="handleClickEvent($event)"></tree-container>
+</div>

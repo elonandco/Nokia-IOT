@@ -1,0 +1,73 @@
+<div class="page-wrapper">
+  <workflow-component *ngIf="workflowActive" [workflowName]="workflowName" [headless]="true" [ngClass]="{'hidden': workflowHidden}"
+                      (isDone)="isDone($event)"></workflow-component>
+
+  <div id="firmwareTable_wrapper" class="firmwareTables_wrapper form-inline dt-bootstrap component-container" *ngIf="componentActive">
+  <h2 class="data-table-title">
+    <i class="ko-ram"></i>Campaigns 
+    <span class="headericons ko-x" (click)="onClose($event)"></span>
+    <span class="headericons ko-restart" (click)="onRefresh($event)"></span> 
+  </h2>
+  <div *ngIf="status == 'FAIL'" class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+    {{message}}  
+  </div>
+<div class="firmware-container" *ngIf="status != 'FAIL'">    
+<div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+ <div class="row">
+    <div class="col-sm-6">
+      <div id="firmwareTable_length" class="firmwareTables_length">
+      <span>Show</span> 
+      <label> entries</label>
+      <button id="addFirmware" name="add-firmware" (click)="launchAddCampaign($event)" class="btn btn-primary"><i class="ko-plus"></i>Add Campaigns</button>
+    </div></div>
+    <div class="col-sm-6"><div id="firmwareTable_filter" class="firmwareTables_filter">
+      <a id="advanceSearch" class="a-search hide"><i class="ko-search"></i>Advance Search</a>
+      <label>Search:<input #gb type="text" pInputText size="50" class="form-control input-sm" placeholder=""></label>
+    </div></div></div>
+  </div>
+  <p-dataTable [value]="_allCampaigns" [resizableColumns]="true"  [rows]="20" [paginator]="true" [pageLinks]="3" [responsive]="true" [rowsPerPageOptions]="[10,25,50]" [paginatorPosition]="top" (onPage)="handlePageSelect($event)"  [globalFilter]="gb"  class="data-table ten-columns filters-on-bottom datatable">
+  
+<!--
+	<p-column field="bulkJobId" header="BulkJobId" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+-->
+    <p-column field="Name" header="Name" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+    <p-column field="Type" header="Type" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+<!--<p-column field="Time Zone" header="Time Zone" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+    <p-column field="Policy Time" header="Policy Day & Time" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+-->
+    <p-column field="Create Date" header="Create Date" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+    <p-column field="Start Date" header="Start Date" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+    <p-column field="Finish Date" header="Finish Date" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+    <p-column field="Devices" header="Devices" [filter]="true" [sortable]="true" filterMatchMode="contains"></p-column>
+    <p-column field="User" header="User" [filter]="true" filterMatchMode="contains"></p-column>
+    <p-column field="Status" header="Status" [filter]="true" filterMatchMode="contains">
+	   	 <template let-jobId="rowData['bulkJobId']" let-col let-campaign="rowData" pTemplate type="body">
+            <span *ngIf="!stopCampaingWfExecTracker[jobId]" class="status">{{campaign[col.field]}}</span>
+            <span *ngIf="stopCampaingWfExecTracker[jobId] && stopCampaingWfExecTracker[jobId] == 'STOPPING'" class="status">Stop in progress...</span>
+            <span *ngIf="stopCampaingWfExecTracker[jobId] && stopCampaingWfExecTracker[jobId] != 'STOPPING'" class="status">Stop {{stopCampaingWfExecTracker[jobId]}}</span>
+            <div class="i-btn status">
+            	<i *ngIf="campaign[col.field].trim() =='IN_PROGRESS' && (!stopCampaingWfExecTracker[jobId] || (stopCampaingWfExecTracker[jobId] && stopCampaingWfExecTracker[jobId] == 'failed')) " [id]="campaign['bulkJobId']" (click)="stopJob(campaign['bulkJobId'])" class="ko- active"></i>
+            	<i *ngIf="campaign[col.field].trim() =='CANCELLING'" [id]="campaign['bulkJobId']" class="ko- stopped"></i>
+            	<i class="ko-info-circle" *ngIf="stopCampaingWfExecTracker[jobId] && stopCampaingWfExecTracker[jobId] != 'STOPPING'" tooltip="{{stopCampaingWfResult[jobId]}}" tooltipEvent="click" tooltipPosition="left" ></i>
+            </div>  			
+        </template>
+    </p-column>
+    <p-column styleClass="col-button" field="Report" header="Report">
+	     <template let-col let-campaign="rowData" pTemplate type="body">
+	     	<a class="view-campaign-chart" data-html="true" type="button" data-trigger="focus" data-placement="top" data-container="body" data-toggle="popover" data-original-title="" title="">
+	     		<div id="viewChart_2" class="i-btn action-btn"><i class="ko-pie-chart"></i>
+	     		</div>
+	     	</a>
+	     </template>
+     </p-column>
+  </p-dataTable>
+</div>
+<div class="pagination-info">
+  {{paginationDetails}}
+</div>
+<div class="close-button">
+  <button class="" type="button" (click)="onClose($event)"><i class="jstree-icon jstree-themeicon ko-x-square main-link jstree-themeicon-custom"></i>Close</button>
+</div>
+</div>
+</div>
+

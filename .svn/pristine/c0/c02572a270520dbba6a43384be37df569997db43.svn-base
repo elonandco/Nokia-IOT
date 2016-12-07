@@ -1,0 +1,181 @@
+@media (min-width: 992px) {
+  body {
+    letter-spacing: .03em;
+  }
+
+  body > .navbar-default,
+  .row-offcanvas .page-header {
+    height: 70px;
+    font-size: 2em;
+    border: none;
+  }
+
+  h1 small {
+    color: #FFF;
+    font-size: .5em;
+    opacity: .75;
+  }
+
+  .row-offcanvas .page-header h1 {
+    padding-top: 8px;
+    opacity: .75;
+  }
+
+  body > .navbar-default {
+    position: fixed;
+    z-index: 200;
+  }
+
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .sidebar-offcanvas {
+    position: fixed;
+    top: 0px;
+    padding-top: 50px !important;
+    height: 100%;
+    overflow: auto;
+  }
+
+  body > .navbar-default {
+    position: fixed;
+    z-index: 200;
+  }
+
+  .off-canvas-content {
+    background: #E0E0E0;
+    padding: 50px 0 0 8px;
+  }
+
+  .page-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+  }
+
+  h1 small {
+    color: #FFF;
+    opacity: .75;
+  }
+}
+
+@media (max-width: 767px) {
+  .row-offcanvas-right .sidebar-offcanvas > div {
+    margin-left: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-default.guide {
+    background: #333 none repeat scroll 0 0 !important;
+    border-radius: 2px !important;
+    font-size: 0.81em;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+}
+
+
+
+.row.row-offcanvas {
+  background: #E0E0E0;
+}
+
+.off-canvas-content > .row {
+  margin: 0 !important;
+  padding: 15px;
+}
+
+.navbar .navbar-brand {
+  background-size: 110px !important;
+}
+
+.roboto-condensed-light {
+  font-family: "roboto-condensed-light"
+}
+
+.roboto-condensed-light-italic {
+  font-family: "roboto-condensed-light-italic"
+}
+
+.roboto-condensed-regular {
+  font-family: "roboto-condensed-regular"
+}
+
+.roboto-condensed-italic {
+  font-family: "roboto-condensed-italic"
+}
+
+.roboto-condensed-bold {
+  font-family: "roboto-condensed-bold"
+}
+
+.roboto-condensed-bold-italic {
+  font-family: "roboto-condensed-bold-italic"
+}
+
+.roboto-thin {
+  font-family: "roboto-thin"
+}
+
+.roboto-thin-italic {
+  font-family: "roboto-thin-italic"
+}
+
+.roboto-light {
+  font-family: "roboto-light"
+}
+
+.roboto-light-italic {
+  font-family: "roboto-light-italic"
+}
+
+.roboto-regular {
+  font-family: "roboto-regular"
+}
+
+.roboto-italic {
+  font-family: "roboto-italic"
+}
+
+.roboto-medium {
+  font-family: "roboto-medium"
+}
+
+.roboto-medium-italic {
+  font-family: "roboto-medium-italic"
+}
+
+.roboto-bold {
+  font-family: "roboto-bold"
+}
+
+.roboto-bold-italic {
+  font-family: "roboto-bold-italic"
+}
+
+.roboto-black {
+  font-family: "roboto-black"
+}
+
+.roboto-black-italic {
+  font-family: "roboto-black-italic"
+}
+
+.font-styles span {
+  width: 100%;
+  display: block;
+  padding: 4px 0;
+}
+
+#spinner > div {
+  position: relative;
+  width: 100px;
+  height: 50px;
+  float: left;
+}
+
+#spinner {
+  height: 175px;
+}

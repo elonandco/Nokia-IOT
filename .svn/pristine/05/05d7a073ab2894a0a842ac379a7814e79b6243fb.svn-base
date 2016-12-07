@@ -1,0 +1,15 @@
+<div class="sidebar">
+  <ul class="nav">
+    <li *ngFor="let service of services">
+      <a>
+        <i class="ko-{{service.id}}"></i><span (click)="service.toggle();navigateToService(service, service.id)">{{service.name}}</span>
+      </a>
+      <ul *ngIf="service.expanded" class="branch">
+        <li *ngFor="let operation of service.operations" (click)="service.toggle();navigateToOperation(operation.id)">
+          <a><i class="ko-{{operation.id}}"></i>{{operation.name}}</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+

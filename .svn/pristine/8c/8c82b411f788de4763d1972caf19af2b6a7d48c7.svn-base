@@ -1,0 +1,85 @@
+.btn.btn-primary:hover {
+  background-color: #333;
+}
+
+.login-container {
+  background: #eaeaea;
+  border-radius: 15px;
+  font-family: 'robotolight';
+  padding: 0 0 0 30px;
+  margin-top: 5%;
+  .form-group {
+      .form-control {
+        width: 95%;
+        display: inline;
+      }
+  }
+}
+
+.login-container h2{
+  margin-bottom: 50px;
+}
+
+.form-radio{
+  padding-left: 15px;
+}
+
+.login-container button{
+  margin-top: 15px;
+}
+
+.canvas{
+  background-color: #FAFAFA;
+  width: 100%;
+  height: 100%;
+
+}
+
+.navbar-header .navbar-brand {
+  padding: 0 0 0 130px;
+  height: auto;
+  font-family: 'robotobold';
+  color: #767676;
+  letter-spacing: 0px;
+  margin: 16px 0 0 25px;
+  background: url(../images/logo.png) no-repeat;
+  background-size: auto 18px;
+  cursor: pointer;
+}
+
+.navbar-header .navbar-brand span {
+  font-family: 'robotolight';
+  color: #3ab8ef;
+  font-weight: bold;
+}
+
+.page-wrapper{
+  min-width: 100%;
+  min-height: 100%;
+  position: relative;
+  top: 0;
+  bottom: 100%;
+  left: 0;
+  z-index: 1;
+  padding: 70px 0 0 8px;
+}
+
+#help-container {
+  display: inline;
+  position: absolute;
+  margin: 11px 0 0 6px;
+}
+body div[id^="tt-mt-tooltip-"].popover {
+  &.top {
+    margin-top: -4px;
+  }
+  &.bottom {
+    margin-top: 4px;
+  }
+  &.left {
+    margin-left: -4px;
+  }
+  &.right {
+  margin-left: 3px;
+}
+}

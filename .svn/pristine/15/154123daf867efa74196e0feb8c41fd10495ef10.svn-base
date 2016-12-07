@@ -1,0 +1,3 @@
+<div id="widgetList" class="widgetList" [dragula]='"widgets-bag"'>
+  <div #content></div>
+</div>

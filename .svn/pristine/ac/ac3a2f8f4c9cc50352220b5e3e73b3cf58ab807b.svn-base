@@ -1,0 +1,31 @@
+<div [ngSwitch]="implementationType" class="step-content">
+  <div *ngSwitchWhen="'not_supported'" class="error">
+    Form node doesn't support implementation of type {{content.data.type}}.
+  </div>
+  <dynamic-form *ngSwitchWhen="'form'" [prevStepId]="workflowStep.prevStepId" [content]="content" [data]="nodeData"  
+	  	(handleSuspend)="suspendWorkflow($event)" (handleCancel)="cancelWorkflow($event)"
+	  	(handleBack)="handleBack()" (handleSubmit)="handleSubmit($event)"></dynamic-form>
+  <div *ngSwitchWhen="'tree'">
+  	<button class="btn btn-default" type="button" (click)="groupTree.expandAll()" style="float: right;margin-top: -30px;"><i class="ko-plus"></i><span class="text">Expand All</span></button>
+    <tree-container #groupTree [treeJson]="nodeData" (handleClick)="handleSubmit($event)"></tree-container>
+  </div>
+  <!-- Button Bar Div -->
+  <div *ngIf="enableButtons" class="tree-form-buttons pull-right step-actions">
+    <button *ngIf="!(content.isCancelButtonHidden) && !(workflowStep.isDone)" (click)="cancelWorkflow()"
+            class="btn btn-default">
+            <span *ngIf="content.data.signalLabels && content.data.signalLabels['cancel']"> {{content.data.signalLabels['cancel']}}</span>
+            <span *ngIf="!(content.data.signalLabels && content.data.signalLabels['cancel'])">Cancel</span>
+    </button>
+    <span *ngIf="enableNext">
+    <button *ngFor="let signal of workflowStep?.validSignals" (click)="sendSignal(signal.name)"
+            class="btn"
+            [ngClass]="{'btn-default':signal.name !=''}">
+            <span *ngIf="content.data.signalLabels && content.data.signalLabels[signal.name]"> {{content.data.signalLabels[signal.name]}}</span>
+            <span *ngIf="!(content.data.signalLabels && content.data.signalLabels[signal.name])">Next</span>
+    </button>
+    </span>
+  </div>
+  <div *ngSwitchWhen="'error'">
+
+  </div>
+</div>

@@ -1,0 +1,58 @@
+.widget-toolbar {
+  margin: 35px auto 15px auto;
+  padding: 0;
+
+  .quick-nav{
+
+    i{
+      font-size: 22px;
+      color: #4889D8;
+      float: left;
+    }
+
+    li{
+      list-style: none;
+      vertical-align: middle;
+      float: left;
+      line-height: 23px;
+      cursor: pointer;
+      padding: 0 6px;
+    }
+
+    li.widget-btn {
+      padding: 6px 29px 7px 5px;
+      position: relative;
+      margin: 0 15px 0 0;
+      background: #999999;
+      color: #fff;
+      font-size: 12px;
+      line-height: 10px;
+      font-family: 'robotobold';
+      cursor: pointer;
+
+      span {
+        position: absolute;
+        right: 5px;
+        bottom: 4px;
+      }
+
+    }
+
+    span {
+      display: inline-block;
+      float: left;
+      font-size: 13px;
+      margin-left: 5px;
+    }
+
+  }
+
+  .quick-nav.clearfix {
+    margin: 0;
+    padding: 0;
+  }
+
+
+
+
+}

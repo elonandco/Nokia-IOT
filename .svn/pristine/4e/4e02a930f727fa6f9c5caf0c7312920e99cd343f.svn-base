@@ -1,0 +1,12 @@
+{
+  "server": {
+    "baseDir": [
+      "./"
+    ],
+    "https": false
+  },
+  "browser": [
+    "google chrome"
+  ],
+  "reloadDebounce": 10000
+}

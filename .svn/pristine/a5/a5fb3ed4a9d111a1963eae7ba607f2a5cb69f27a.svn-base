@@ -1,0 +1,79 @@
+<div class="form-group {{formElement.class}}" id="{{formElement.id}}" [ngFormModel]="form" [ngSwitch]="formElement.controlType" [ngClass]="{'has-error':!isValid}">
+  <label
+    *ngIf="formElement.controlType!=='checkbox' && formElement.controlType !== 'static'"
+    [attr.for]="formElement.key"
+    class="col-md-4 control-label">{{formElement.label}}<span *ngIf="ifRequired(formElement.validations)" class="required-label">*</span></label>
+
+    <div *ngSwitchWhen="'textbox'" class="col-md-4 control-input">
+      <input [ngControl]="formElement.key"
+             [id]="formElement.key" [type]="formElement.type" placeholder="{{formElement.placeholder}}" class="form-control" value="{{formElement.value}}">
+      <span class="help-block" *ngFor="let error of errorList">{{error}}</span>
+    </div>
+
+    <div *ngSwitchWhen="'button'" class="col-md-4 control-input">
+      <button [id]="formElement.key" disabled="{{formElement.status}}" class="btn btn-default">
+        <i class="fa {{formElement.icon}}"></i>
+        {{formElement.value}}
+      </button>
+    </div>
+    <div *ngSwitchWhen="'date'" class="col-md-4 control-input">
+      <p-calendar minDate="0" [ngControl]="formElement.key"
+             [id]="formElement.key" [type]="formElement.type" showIcon="true"></p-calendar>
+      <span class="help-block" *ngFor="let error of errorList">{{error}}</span>
+    </div>
+
+    <div *ngSwitchWhen="'file'" class="col-md-4 control-input">
+      <input [ngControl]="formElement.key" accept="{{formElement.accept}}"
+             [id]="formElement.key" [type]="formElement.type" class="form-control">
+      <span class="help-block" *ngFor="let error of errorList">{{error}}</span>
+    </div>
+
+    <div *ngSwitchWhen="'dropdown'" class="col-md-4 control-input">
+      <select [id]="formElement.key" *ngSwitchWhen="'dropdown'" [ngControl]="formElement.key" class="form-control">
+        <option *ngFor="let opt of formElement.options | removeDuplicates" [value]="opt.key" [selected]="opt.selected">{{opt.value}}</option>
+      </select>
+      <span class="help-block" *ngFor="let error of errorList">{{error}}</span>
+    </div>
+
+    <div *ngSwitchWhen="'radio'" class="col-md-4 control-input">
+      <div class="radio">
+        <label [attr.for]="formElement.key">
+          <input #{{question.key}} [id]="formElement.key" type="radio" [attr.name]="formElement.groupId"
+                 [ngControl]="formElement.key" [checked]="formElement.checked">
+          {{formElement.text}}</label>
+      </div>
+    </div>
+
+    <div *ngSwitchWhen="'checkbox'" class="col-md-offset-4 col-md-4 control-input">
+      <div class="checkbox">
+        <label [attr.for]="formElement.key">
+          <input [id]="formElement.key" type="checkbox" [attr.name]="formElement.key"
+                 [value]="formElement.value"
+                 [ngControl]="formElement.key">
+          {{formElement.label}}</label>
+      </div>
+    </div>
+
+    <div *ngSwitchWhen="'textarea'" class="col-md-4 control-input">
+        <textarea [id]="formElement.key" [ngControl]="formElement.key"
+                  class="form-control"></textarea>
+      <span class="help-block" *ngFor="let error of errorList">{{error}}</span>
+    </div>
+
+    <div *ngSwitchWhen="'static'">
+      <label class="col-md-4 control-label">{{formElement.label}}</label>
+      <div class="col-md-6 control-input">
+        <p class="form-control-static">{{formElement.value}}</p>
+        <p class="list-items" *ngFor="let item of formElement.list">{{item}}</p>
+        <div *ngIf="formElement.button" class="{{formElement.button}}"></div>
+      </div>
+    </div>
+
+    <div id="help-container" *ngIf="formElement.tooltip">
+      <i class="ko-question-circle password-help" tooltip="{{formElement.tooltip}}" tooltipEvent="click" tooltipPosition="top" ></i>
+    </div>
+
+
+</div>
+
+

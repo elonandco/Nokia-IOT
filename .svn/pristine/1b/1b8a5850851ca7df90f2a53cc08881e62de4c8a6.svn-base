@@ -1,0 +1,66 @@
+<div class="page-wrapper">
+<div class="back-to-home" (click)="onClose($event)"><span class="ko-home" style="cursor: pointer;"></span>Home</div>
+  <workflow-component *ngIf="workflowActive" [workflowName]="workflowName" [headless]="true" [ngClass]="{'hidden': workflowHidden}"
+                      (isDone)="isDone($event)"></workflow-component>
+
+  <div id="firmwareTable_wrapper" class="firmwareTables_wrapper form-inline dt-bootstrap component-container" *ngIf="componentActive">
+  <h2 class="data-table-title">
+    <i class="ko-ram"></i>FIRMWARE
+    <span class="headericons ko-x" (click)="onClose($event)"></span>
+    <span class="headericons ko-restart" (click)="onRefresh($event)"></span>
+  </h2>
+  <div *ngIf="status == 'FAIL'" class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+    {{message}}
+  </div>
+  <div *ngIf="resultCode == '-1'" class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+    {{resultMessage}}
+  </div>
+<div class="firmware-container" *ngIf="status != 'FAIL' || resultCode != '-1'">
+<div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+ <div class="row">
+    <div class="col-sm-6">
+      <div id="firmwareTable_length" class="firmwareTables_length">
+      <span>Show</span>
+      <label> entries</label>
+      <button id="addFirmware" name="add-firmware" (click)="launchAddFirmware($event)" class="btn btn-primary"><i class="ko-plus"></i>Add Firmware</button>
+    </div></div>
+    <div class="col-sm-6"><div id="firmwareTable_filter" class="firmwareTables_filter">
+      <a id="advanceSearch" class="a-search hide"><i class="ko-search"></i>Advance Search</a>
+      <label>Search:<input #gb type="text" pInputText size="50" class="form-control input-sm" placeholder=""></label>
+    </div></div></div>
+  </div>
+    <p-dataTable id="dataGrid" [value]="_allFirmware" #allfirmware [rows]="10" [paginator]="true" [pageLinks]="3" [responsive]="true" [rowsPerPageOptions]="[10,25,50]" [paginatorPosition]="top" 
+    	(onPage)="handlePageSelect($event)"
+    	(onSort)="onSort($event,allfirmware)"
+    	[globalFilter]="gb"  class="data-table ten-columns filters-on-bottom">
+      <p-column field="Name" id="column1" header="Firmware Name" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Description" id="column2" header="Description" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="File Size" styleClass="column3" header="File Size (in Bytes)" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Severity" styleClass="column4" header="Severity" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Download Time" styleClass="column5" header="Download Time (in Seconds)" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Update Time" styleClass="column6" header="Update (in Seconds)" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Manufacturer Model" styleClass="column7" header="Manufacturer, Model" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Source Version" styleClass="column8" header="Source Version" [filter]="true" [sortable]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Target Version" [sortable]="true" styleClass="column9" header="Target Version" [filter]="true" filterMatchMode="contains">
+      </p-column>
+      <p-column field="Date Added" styleClass="column10" header="Date Added" [sortable]="true" [filter]="true" filterMatchMode="contains">
+      </p-column>
+    </p-dataTable>
+</div>
+<div class="pagination-info">
+  {{paginationDetails}}
+</div>
+<div class="close-button">
+  <button class="btn btn-default" type="button" (click)="onClose($event)"><i class="jstree-icon jstree-themeicon ko-x-square main-link jstree-themeicon-custom"></i>Close</button>
+</div>
+</div>
+</div>
+

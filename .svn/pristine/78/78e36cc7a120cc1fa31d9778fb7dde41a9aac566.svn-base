@@ -1,0 +1,23 @@
+<div class="campaign-widget-settings">
+    <ul>
+      <toggle-button isOn="{{!showCount}}" id="displayCount" (toggle)="onDisplayChange($event)"></toggle-button>
+      <span class="activity">Display Count</span>
+    </ul>
+
+  <span class="include">For the Pass 6</span>
+  <ul>
+    <li>
+
+      <label class="radio-inline">
+        <input type="radio" name="campaignDisplayRadioGroup" [checked]='displayType === "Days"' value="Days" (change)="onDisplayChange($event)"> Days
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="campaignDisplayRadioGroup" [checked]='displayType === "Weeks"'  value="Weeks" (change)="onDisplayChange($event)"> Weeks
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="campaignDisplayRadioGroup" [checked]='displayType === "Months"'  value="Months" (change)="onDisplayChange($event)"> Months
+      </label>
+    </li>
+  </ul>
+
+</div>

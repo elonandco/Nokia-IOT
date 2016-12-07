@@ -1,0 +1,15 @@
+import {Pipe} from "@angular/core";
+
+@Pipe({
+	name: "removeDuplicates"
+})
+export class SearchPipe {
+	transform(array:Array<any>, args?){
+		if(array){		
+			array = array.filter(function(elem, index, self){
+				return index === _.map(self, 'key').indexOf(elem.key)
+			})
+		}
+		return array;
+	}
+}
